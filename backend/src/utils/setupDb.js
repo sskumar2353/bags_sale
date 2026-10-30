@@ -54,8 +54,12 @@ export async function setupDatabase() {
       await connection.query(`USE \`${database}\`;`);
     }
 
-    const schemaPath = path.resolve('database', 'schema.sql');
-    const seedPath = path.resolve('database', 'seed.sql');
+    const schemaPath = fs.existsSync(path.resolve('database', 'schema.sql'))
+      ? path.resolve('database', 'schema.sql')
+      : path.resolve('..', 'database', 'schema.sql');
+    const seedPath = fs.existsSync(path.resolve('database', 'seed.sql'))
+      ? path.resolve('database', 'seed.sql')
+      : path.resolve('..', 'database', 'seed.sql');
 
     if (fs.existsSync(schemaPath)) {
       console.log('Applying schema from schema.sql...');
