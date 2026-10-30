@@ -46,6 +46,10 @@ export default function ProductCard({ product }) {
             alt={product.name}
             loading="lazy"
             className="main-product-img"
+            onError={(e) => {
+              e.currentTarget.src =
+                'https://images.dailyobjects.com/marche/assets/images/other-2/CP-desktop.jpg?tr=cm-pad_crop,v-3';
+            }}
           />
         </Link>
 

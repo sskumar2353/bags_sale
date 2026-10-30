@@ -20,7 +20,7 @@ const SLIDES = [
     subtitle: 'From morning commutes to weekend getaways. Thoughtful internal organization with padded laptop sleeves.',
     link: '/category/tote-bags',
     btnText: 'Discover Totes',
-    image: 'https://images.dailyobjects.com/marche/assets/images/other/new-totes.jpg?tr=cm-pad_crop,v-3',
+    image: 'https://images.dailyobjects.com/marche/product-images/1204/lagoon-basalt-clay-pivot-key-tote-images/Lagoon-Basalt-Clay-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3',
     accent: '#e66b55'
   },
   {
@@ -86,7 +86,15 @@ export default function BrandPromotionSlider() {
               aria-hidden={!isActive}
             >
               <div className="promo-slide-media">
-                <img src={slide.image} alt={slide.title} loading={idx === 0 ? 'eager' : 'lazy'} />
+                <img
+                  src={slide.image}
+                  alt={slide.title}
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      'https://images.dailyobjects.com/marche/assets/images/other-2/CP-desktop.jpg?tr=cm-pad_crop,v-3';
+                  }}
+                />
                 <div className="promo-slide-overlay" />
               </div>
 

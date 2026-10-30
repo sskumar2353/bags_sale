@@ -61,7 +61,15 @@ export default function CategoryStoryBar({ activeSlug }) {
               className={`story-item ${isActive ? 'active' : ''}`}
             >
               <div className="story-circle">
-                <img src={cat.image} alt={cat.title} loading="lazy" />
+                <img
+                  src={cat.image}
+                  alt={cat.title}
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      'https://images.dailyobjects.com/marche/assets/images/other-2/CP-desktop.jpg?tr=cm-pad_crop,v-3';
+                  }}
+                />
               </div>
               <span className="story-title">{cat.title}</span>
             </Link>
