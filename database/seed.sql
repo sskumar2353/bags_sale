@@ -1,5 +1,3 @@
-USE daily_objects_db;
-
 -- =========================================================
 -- SEED CATEGORIES (Idempotent Top-Level & Subcategories)
 -- =========================================================

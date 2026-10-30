@@ -1,14 +1,8 @@
-CREATE DATABASE IF NOT EXISTS daily_objects_db
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
-
-USE daily_objects_db;
-
 -- =========================================================
 -- USERS
 -- =========================================================
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100),
@@ -33,7 +27,7 @@ CREATE TABLE users (
 --       └── Pivot
 -- =========================================================
 
-CREATE TABLE categories (
+CREATE TABLE IF NOT EXISTS categories (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     parent_id INT UNSIGNED NULL,
     name VARCHAR(150) NOT NULL,
@@ -57,7 +51,7 @@ CREATE TABLE categories (
 -- PRODUCTS
 -- =========================================================
 
-CREATE TABLE products (
+CREATE TABLE IF NOT EXISTS products (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     category_id INT UNSIGNED NOT NULL,
 
@@ -110,7 +104,7 @@ CREATE TABLE products (
 -- PRODUCT IMAGES
 -- =========================================================
 
-CREATE TABLE product_images (
+CREATE TABLE IF NOT EXISTS product_images (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     product_id INT UNSIGNED NOT NULL,
 
@@ -135,7 +129,7 @@ CREATE TABLE product_images (
 -- Colors / sizes / SKU / individual stock
 -- =========================================================
 
-CREATE TABLE product_variants (
+CREATE TABLE IF NOT EXISTS product_variants (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     product_id INT UNSIGNED NOT NULL,
 
@@ -171,7 +165,7 @@ CREATE TABLE product_variants (
 -- ADDRESSES
 -- =========================================================
 
-CREATE TABLE addresses (
+CREATE TABLE IF NOT EXISTS addresses (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL,
 
@@ -204,7 +198,7 @@ CREATE TABLE addresses (
 -- CARTS
 -- =========================================================
 
-CREATE TABLE carts (
+CREATE TABLE IF NOT EXISTS carts (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL UNIQUE,
 
@@ -223,7 +217,7 @@ CREATE TABLE carts (
 -- CART ITEMS
 -- =========================================================
 
-CREATE TABLE cart_items (
+CREATE TABLE IF NOT EXISTS cart_items (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     cart_id INT UNSIGNED NOT NULL,
     product_id INT UNSIGNED NOT NULL,
@@ -263,7 +257,7 @@ CREATE TABLE cart_items (
 -- WISHLISTS
 -- =========================================================
 
-CREATE TABLE wishlists (
+CREATE TABLE IF NOT EXISTS wishlists (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL UNIQUE,
 
@@ -282,7 +276,7 @@ CREATE TABLE wishlists (
 -- WISHLIST ITEMS
 -- =========================================================
 
-CREATE TABLE wishlist_items (
+CREATE TABLE IF NOT EXISTS wishlist_items (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     wishlist_id INT UNSIGNED NOT NULL,
     product_id INT UNSIGNED NOT NULL,
@@ -309,7 +303,7 @@ CREATE TABLE wishlist_items (
 -- ORDERS
 -- =========================================================
 
-CREATE TABLE orders (
+CREATE TABLE IF NOT EXISTS orders (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 
     user_id INT UNSIGNED NOT NULL,
@@ -379,7 +373,7 @@ CREATE TABLE orders (
 -- so old orders remain correct even if products change.
 -- =========================================================
 
-CREATE TABLE order_items (
+CREATE TABLE IF NOT EXISTS order_items (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 
     order_id INT UNSIGNED NOT NULL,
@@ -429,7 +423,7 @@ CREATE TABLE order_items (
 -- Razorpay information
 -- =========================================================
 
-CREATE TABLE payments (
+CREATE TABLE IF NOT EXISTS payments (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 
     order_id INT UNSIGNED NOT NULL UNIQUE,

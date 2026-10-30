@@ -6,7 +6,6 @@ dotenv.config();
 
 async function runSqlFile(connection, filePath) {
   const sql = fs.readFileSync(filePath, 'utf8');
-  // Split statements by semicolon that are followed by a newline or end of file
   const statements = sql
     .replace(/--.*$/gm, '') // Remove comments
     .split(/;\s*[\r\n]+/)
@@ -17,7 +16,6 @@ async function runSqlFile(connection, filePath) {
     try {
       await connection.query(stmt);
     } catch (err) {
-      // Ignore "already exists" or duplicate entry warnings during setup
       if (err.code !== 'ER_DUP_ENTRY' && err.code !== 'ER_TABLE_EXISTS_ERROR') {
         console.warn(`[SQL Notice in ${path.basename(filePath)}]:`, err.message);
       }
@@ -26,19 +24,35 @@ async function runSqlFile(connection, filePath) {
 }
 
 export async function setupDatabase() {
-  const host = process.env.DB_HOST || 'localhost';
-  const port = Number(process.env.DB_PORT || 3306);
-  const user = process.env.DB_USER || 'root';
-  const password = process.env.DB_PASSWORD || '';
-  const database = process.env.DB_NAME || 'daily_objects_db';
-
-  console.log(`Connecting to MySQL on ${host}:${port} as ${user}...`);
-
   let connection;
   try {
-    connection = await mysql.createConnection({ host, port, user, password, multipleStatements: true });
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`);
-    await connection.query(`USE \`${database}\`;`);
+    if (process.env.DATABASE_URL) {
+      console.log('Connecting to cloud database via DATABASE_URL...');
+      connection = await mysql.createConnection({
+        uri: process.env.DATABASE_URL,
+        multipleStatements: true,
+        ...(process.env.DB_SSL === 'true' ? { ssl: { rejectUnauthorized: false } } : {})
+      });
+    } else {
+      const host = process.env.DB_HOST || process.env.MYSQLHOST || 'localhost';
+      const port = Number(process.env.DB_PORT || process.env.MYSQLPORT || 3306);
+      const user = process.env.DB_USER || process.env.MYSQLUSER || 'root';
+      const password = process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || '';
+      const database = process.env.DB_NAME || process.env.MYSQLDATABASE || 'daily_objects_db';
+
+      console.log(`Connecting to MySQL on ${host}:${port} as ${user}...`);
+      connection = await mysql.createConnection({
+        host,
+        port,
+        user,
+        password,
+        multipleStatements: true
+      });
+      await connection.query(
+        `CREATE DATABASE IF NOT EXISTS \`${database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+      );
+      await connection.query(`USE \`${database}\`;`);
+    }
 
     const schemaPath = path.resolve('database', 'schema.sql');
     const seedPath = path.resolve('database', 'seed.sql');
