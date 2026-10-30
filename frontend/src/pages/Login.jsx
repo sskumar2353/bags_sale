@@ -14,14 +14,26 @@ export default function Login() {
 
   const from = location.state?.from?.pathname || '/profile';
 
+  // If already logged in as admin, redirect directly to admin console
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('do-user') || 'null');
+    if (user && user.role === 'admin') {
+      navigate('/admin/dashboard', { replace: true });
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setBusy(true);
     setError(null);
 
     try {
-      await login({ email, password });
-      navigate(from, { replace: true });
+      const loggedUser = await login({ email, password });
+      if (loggedUser && loggedUser.role === 'admin') {
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        navigate(from, { replace: true });
+      }
     } catch (err) {
       setError(err.message);
     } finally {

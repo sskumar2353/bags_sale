@@ -1,7 +1,16 @@
-import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingBag, FolderTree, ArrowLeft, Users } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, Package, ShoppingBag, FolderTree, LogOut, Users } from 'lucide-react';
+import useAuth from '../../hooks/useAuth';
 
 export default function AdminSidebar() {
+  const { logout, user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/admin/login', { replace: true });
+  };
+
   const links = [
     { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { to: '/admin/products', label: 'Products', icon: Package },
@@ -27,6 +36,7 @@ export default function AdminSidebar() {
       <div style={{ marginBottom: '20px', paddingLeft: '8px' }}>
         <span className="eyebrow">ADMIN CONSOLE</span>
         <h3 style={{ margin: '4px 0', fontSize: '18px' }}>Daily Objects</h3>
+        <span style={{ fontSize: '11px', color: '#777' }}>Logged in as {user?.email || 'Admin'}</span>
       </div>
 
       {links.map((link) => {
@@ -55,20 +65,24 @@ export default function AdminSidebar() {
       })}
 
       <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid var(--line)' }}>
-        <NavLink
-          to="/"
+        <button
+          onClick={handleLogout}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            fontSize: '12px',
-            color: 'var(--muted)',
-            textDecoration: 'none',
-            padding: '8px'
+            fontSize: '13px',
+            color: '#b00020',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '8px',
+            width: '100%',
+            fontWeight: '600'
           }}
         >
-          <ArrowLeft size={16} /> Back to Storefront
-        </NavLink>
+          <LogOut size={16} /> Sign Out (Admin)
+        </button>
       </div>
     </aside>
   );

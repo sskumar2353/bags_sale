@@ -7,15 +7,17 @@ export default function Footer() {
 
   const cols = [
     {
-      title: 'SHOP',
+      title: 'BAGS & ACCESSORIES',
       links: [
-        ['All Bags', '/shop'],
-        ['Backpacks', '/category/Backpacks'],
-        ['Tote Bags', '/category/Tote%20Bags'],
-        ['Crossbody Bags', '/category/Crossbody%20Bags'],
-        ['Laptop Bags', '/category/Messenger%20%2F%20Laptop%20Bags'],
-        ['Duffle Bags', '/category/Duffle%20Bags'],
-        ['Pouches', '/category/Pouches']
+        ['TOTE BAGS', '/category/tote-bags'],
+        ['CROSSBODY BAGS', '/category/crossbody-bags'],
+        ['BACKPACKS', '/category/backpacks'],
+        ['MESSENGER BAGS', '/category/messenger-laptop-bags'],
+        ['PHONE BAGS', '/category/phone-bags'],
+        ['WALLETS', '/category/wallets'],
+        ['DUFFLE BAGS', '/category/duffle-bags'],
+        ['POUCHES', '/category/pouches'],
+        ['BAGS ACCESSORIES', '/category/bag-accessories']
       ]
     },
     {
