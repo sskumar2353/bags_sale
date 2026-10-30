@@ -126,6 +126,16 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/payments', rateLimiter(30, 60 * 1000), paymentRoutes);
 app.use('/api/admin', adminRoutes);
 
+// Fallback mounts without /api prefix
+app.use('/auth', rateLimiter(25, 60 * 1000), authRoutes);
+app.use('/categories', categoryRoutes);
+app.use('/products', productRoutes);
+app.use('/cart', cartRoutes);
+app.use('/wishlist', wishlistRoutes);
+app.use('/orders', orderRoutes);
+app.use('/payments', rateLimiter(30, 60 * 1000), paymentRoutes);
+app.use('/admin', adminRoutes);
+
 // Centralized Error Handling
 app.use(errorMiddleware);
 
