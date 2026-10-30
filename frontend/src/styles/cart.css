@@ -1,0 +1,154 @@
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.cart-row {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+}
+
+.cart-row > img {
+  width: 110px;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cart-row > b {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cart-product {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 15px;
+}
+
+.cart-product a {
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.cart-product a:hover {
+  color: var(--accent);
+}
+
+.cart-product > span {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.cart-product > strong {
+  font-size: 15px;
+  margin-top: 4px;
+  color: var(--ink);
+}
+
+.quantity.compact {
+  margin: 10px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.quantity.compact > div {
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.quantity.compact button {
+  height: 36px;
+  width: 36px;
+  font-size: 16px;
+  display: grid;
+  place-items: center;
+}
+
+.quantity.compact b {
+  min-width: 28px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.quantity.compact .remove {
+  background: none;
+  border: none;
+  text-decoration: underline;
+  color: #777970;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.quantity.compact .remove:hover {
+  color: #c62828;
+}
+
+.summary {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 28px;
+  background: #ffffff;
+}
+
+.summary h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 20px;
+  color: var(--ink);
+}
+
+.summary > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14.5px;
+  margin: 14px 0;
+  color: #55574e;
+}
+
+.summary > div b {
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.summary-total {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin-top: 20px !important;
+  font-size: 16px !important;
+  font-weight: 600;
+  color: var(--ink) !important;
+}
+
+.summary-total b {
+  font-size: 20px !important;
+  font-weight: 700;
+}
+
+.summary .button {
+  margin-top: 16px;
+}
+
+.summary > p {
+  font-size: 12.5px;
+  color: var(--muted);
+  text-align: center;
+  margin: 14px 0 0;
+  line-height: 1.5;
+}

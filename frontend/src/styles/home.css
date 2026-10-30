@@ -1,0 +1,260 @@
+.hero {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--space);
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  min-height: min(600px, 60vw);
+}
+
+.hero-copy {
+  background: var(--soft);
+  padding: clamp(36px, 5vw, 80px) 9% 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+}
+
+.hero-copy:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 70%;
+  width: 3px;
+  background: var(--accent);
+}
+
+.hero-copy h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: clamp(48px, 5.2vw, 76px);
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  margin: 20px 0;
+  color: var(--ink);
+}
+
+.hero-copy h1 i {
+  font-weight: 400;
+  font-style: italic;
+}
+
+.hero-copy > p {
+  font-size: 15px;
+  color: #55574e;
+  line-height: 1.7;
+  max-width: 360px;
+  margin: 0 0 28px;
+}
+
+.hero-note {
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: #777970;
+  margin-top: auto;
+  padding-top: 28px;
+}
+
+.hero-image {
+  position: relative;
+  min-height: 460px;
+  overflow: hidden;
+  background: #e3ded5;
+}
+
+.hero-image img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+  object-position: center 45%;
+  transition: transform 1.2s cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+
+.hero:hover .hero-image img {
+  transform: scale(1.03);
+}
+
+.hero-image-tag {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 6px 12px;
+  border-radius: 3px;
+  backdrop-filter: blur(4px);
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.category-tile {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1.5;
+  background: #eee;
+  border-radius: 4px;
+}
+
+.category-tile:after {
+  content: '';
+  position: absolute;
+  inset: 35% 0 0;
+  background: linear-gradient(transparent, rgba(18, 19, 15, 0.65));
+  pointer-events: none;
+}
+
+.category-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.75s cubic-bezier(0.2, 0.65, 0.3, 1);
+}
+
+.category-tile:hover img {
+  transform: scale(1.05);
+}
+
+.category-tile span {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: #ffffff;
+  padding: 24px 20px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.category-tile span svg {
+  transition: var(--ease);
+}
+
+.category-tile:hover span svg {
+  transform: translateX(4px);
+}
+
+.featured-section {
+  padding-top: 50px;
+}
+
+.campaign {
+  max-width: var(--container);
+  margin: 20px auto 0;
+  height: clamp(360px, 40vw, 480px);
+  position: relative;
+  overflow: hidden;
+  background: #383933;
+  border-radius: 4px;
+}
+
+.campaign:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(23, 25, 20, 0.8) 0%, rgba(23, 25, 20, 0.45) 45%, rgba(23, 25, 20, 0.05) 100%);
+}
+
+.campaign > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+}
+
+.campaign-copy {
+  position: absolute;
+  z-index: 1;
+  color: #ffffff;
+  left: clamp(24px, 5vw, 64px);
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 440px;
+}
+
+.campaign-copy .eyebrow {
+  color: #e3dfd6;
+}
+
+.campaign-copy h2 {
+  font-family: Georgia, serif;
+  font-size: clamp(40px, 4.8vw, 64px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 16px 0;
+}
+
+.campaign-copy p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #f0ede6;
+  max-width: 360px;
+  margin-bottom: 26px;
+}
+
+.values {
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+.centered {
+  display: block;
+  text-align: center;
+}
+
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+  margin: 44px auto 0;
+  max-width: 900px;
+}
+
+.value-grid > div {
+  border-right: 1px solid var(--line);
+  padding: 10px 24px;
+}
+
+.value-grid > div:last-child {
+  border: none;
+}
+
+.value-grid svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 1.5;
+  color: var(--accent);
+}
+
+.value-grid h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 14px 0 6px;
+  color: var(--ink);
+}
+
+.value-grid p {
+  font-size: 13.5px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}

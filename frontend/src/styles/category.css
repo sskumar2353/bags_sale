@@ -1,0 +1,314 @@
+/* Daily Objects Circular Category Story Bar */
+
+.category-story-bar-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 18px 0 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #ebebeb;
+  scrollbar-width: none; /* Firefox */
+}
+
+.category-story-bar-wrapper::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.category-story-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: clamp(16px, 2.8vw, 36px);
+  padding: 0 var(--space);
+  min-width: max-content;
+}
+
+@media (min-width: 1200px) {
+  .category-story-bar {
+    justify-content: center;
+  }
+}
+
+.story-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  width: 90px;
+  flex-shrink: 0;
+  cursor: pointer;
+  group: true;
+}
+
+.story-circle {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f7f7f7;
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s ease, box-shadow 0.25s ease;
+}
+
+.story-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.story-item:hover .story-circle {
+  transform: scale(1.06);
+  border-color: #121212;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.story-item:hover .story-circle img {
+  transform: scale(1.08);
+}
+
+.story-item.active .story-circle {
+  border-color: #121212;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+}
+
+.story-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #121212;
+  margin-top: 10px;
+  text-align: center;
+  line-height: 1.25;
+  transition: color 0.2s ease;
+}
+
+.story-item:hover .story-title,
+.story-item.active .story-title {
+  color: #000000;
+}
+
+/* Daily Objects Product Card Enhancements */
+.product-subtitle-tag {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #e66b55;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.discount-tag {
+  font-size: 12px;
+  font-weight: 700;
+  color: #008000;
+  margin-left: 6px;
+}
+
+.badge-drop {
+  background: #008000 !important;
+  color: #ffffff !important;
+}
+
+.quick-add-btn {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  background: #121212;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.25s ease;
+  z-index: 5;
+}
+
+.product-card:hover .quick-add-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.quick-add-btn:hover {
+  background: #2db58e;
+}
+
+/* Category Header Banner with Subcategory Circles matching DailyObjects */
+.category-header-banner {
+  padding: 32px 0 20px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 24px;
+}
+
+.category-header-title {
+  font-size: clamp(22px, 3.2vw, 32px);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #121212;
+  margin: 0 0 24px 0;
+}
+
+.subcategory-pills-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(16px, 2.5vw, 32px);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px var(--space);
+  scrollbar-width: none;
+}
+
+.subcategory-pills-row::-webkit-scrollbar {
+  display: none;
+}
+
+.subcategory-pill {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  flex-shrink: 0;
+  width: 76px;
+  transition: transform 0.2s ease;
+}
+
+.subcategory-pill:hover {
+  transform: translateY(-2px);
+}
+
+.subcategory-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f7f7f7;
+  border: 2px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.subcategory-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.subcategory-circle.circle-all {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #121212;
+  background: #f3f3f3;
+}
+
+.subcategory-pill.active .subcategory-circle {
+  border-color: #121212;
+  box-shadow: 0 0 0 2px #121212;
+}
+
+.subcategory-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #555555;
+  text-align: center;
+  line-height: 1.25;
+  text-transform: capitalize;
+}
+
+.subcategory-pill.active .subcategory-label {
+  color: #121212;
+  font-weight: 800;
+}
+
+/* Pagination Bar */
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 48px 0 32px;
+}
+
+.page-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #ffffff;
+  color: #121212;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page-nav-btn:hover:not(:disabled) {
+  background: #121212;
+  color: #ffffff;
+  border-color: #121212;
+}
+
+.page-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-num-btn {
+  min-width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #ffffff;
+  color: #444444;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page-num-btn:hover {
+  border-color: #121212;
+  color: #121212;
+}
+
+.page-num-btn.active {
+  background: #121212;
+  color: #ffffff;
+  border-color: #121212;
+  font-weight: 700;
+}
+
