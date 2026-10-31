@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
 import productService from '../services/productService';
 import useCart from '../hooks/useCart';
+import formatPrice from '../utils/formatPrice';
 import CategoryStoryBar from '../components/home/CategoryStoryBar';
 
 function HomeCollectionCard({ product, onAddToCart, isJustAdded }) {
   const [activeSwatchImage, setActiveSwatchImage] = useState(null);
   const [activeSwatchId, setActiveSwatchId] = useState(null);
 
+  const formattedPrice = formatPrice(product.price);
   const defaultImage =
     product.image ||
     product.primary_image ||
