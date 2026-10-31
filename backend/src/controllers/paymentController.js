@@ -1,4 +1,32 @@
 import orderService from '../services/orderService.js';
+import razorpayService from '../services/razorpayService.js';
+
+export const createDonationOrder = async (req, res, next) => {
+  try {
+    const { amount = 1000 } = req.body;
+    const numAmount = Math.max(1, Number(amount) || 1000);
+    const receipt = `don_${Date.now()}`;
+
+    let razorpayOrder = null;
+    try {
+      razorpayOrder = await razorpayService.createRazorpayOrder({
+        amount: numAmount,
+        currency: 'INR',
+        receipt
+      });
+    } catch (rzpErr) {
+      console.warn('Backend Razorpay order creation for donation failed:', rzpErr.message);
+    }
+
+    res.json({
+      razorpayOrder,
+      keyId: process.env.RAZORPAY_KEY_ID || '',
+      amount: numAmount
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const createOrder = async (req, res, next) => {
   try {

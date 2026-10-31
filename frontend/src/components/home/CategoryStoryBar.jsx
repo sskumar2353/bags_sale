@@ -22,9 +22,9 @@ export default function CategoryStoryBar({ categories = [], products = [] }) {
   const resolvedCategories = useMemo(() => {
     if (!categories || !categories.length) return [];
 
-    // Filter to top-level active categories (or all if flat)
+    // Filter to top-level active categories and show exactly 7 items
     const activeCats = categories.filter((c) => !c.parent_id);
-    const targetCats = activeCats.length > 0 ? activeCats : categories;
+    const targetCats = (activeCats.length > 0 ? activeCats : categories).slice(0, 7);
 
     return targetCats.map((cat) => {
       const name = typeof cat === 'string' ? cat : cat.name;

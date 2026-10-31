@@ -1,22 +1,93 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Search, UserRound, ShoppingBag, Shield, Heart } from 'lucide-react';
+import { Menu, X, Search, UserRound, ShoppingBag, Shield, Heart, CheckCircle2 } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 import useCart from '../../hooks/useCart';
 import useWishlist from '../../hooks/useWishlist';
 import SearchBar from './SearchBar';
-import { NAV_LINKS } from '../../utils/constants';
+import { NAV_LINKS, RAZORPAY_KEY_ID } from '../../utils/constants';
+import api from '../../services/api';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [donateOpen, setDonateOpen] = useState(false);
   const [donationAmount, setDonationAmount] = useState(1000);
+  const [donating, setDonating] = useState(false);
+  const [donationSuccess, setDonationSuccess] = useState(null);
   const { user, isAdmin } = useAuth();
   const { itemCount } = useCart();
   const { items: wishlistItems } = useWishlist();
   const wishlistCount = wishlistItems ? wishlistItems.length : 0;
   const location = useLocation();
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleProceedDonate = async () => {
+    try {
+      setDonating(true);
+      const loaded = await loadRazorpayScript();
+      if (!loaded) {
+        alert('Could not initialize Razorpay payment gateway. Please check your internet connection.');
+        return;
+      }
+
+      let orderData = null;
+      try {
+        const res = await api.post('/payments/donate', { amount: donationAmount });
+        orderData = res.data;
+      } catch (e) {
+        console.warn('Backend donation order creation skipped/failed:', e.message);
+      }
+
+      const key = orderData?.keyId || RAZORPAY_KEY_ID;
+
+      const options = {
+        key,
+        amount: donationAmount * 100, // paise
+        currency: 'INR',
+        name: 'Bethany Looms',
+        description: `Mission Donation (₹${donationAmount}) · Bethany Leprosy Mission Association`,
+        order_id: orderData?.razorpayOrder?.id,
+        prefill: {
+          name: user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : '',
+          email: user?.email || '',
+          contact: user?.phone || ''
+        },
+        theme: {
+          color: '#1e2d4a'
+        },
+        handler: (response) => {
+          setDonationSuccess(response.razorpay_payment_id || 'SUCCESS');
+        },
+        modal: {
+          ondismiss: () => {
+            setDonating(false);
+          }
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error('Donation checkout error:', err);
+      alert('Could not open payment gateway: ' + (err.message || 'Unknown error'));
+    } finally {
+      setDonating(false);
+    }
+  };
 
   const handleNavLinkClick = (to) => {
     setMenuOpen(false);
@@ -149,46 +220,78 @@ export default function Navbar() {
 
       {searchOpen && <SearchBar onClose={() => setSearchOpen(false)} />}
 
-      {/* Quick Donation Modal */}
+      {/* Quick Donation Modal (Connected to Razorpay Gateway) */}
       {donateOpen && (
-        <div className="donate-modal-overlay" onClick={() => setDonateOpen(false)}>
+        <div className="donate-modal-overlay" onClick={() => { setDonateOpen(false); setDonationSuccess(null); }}>
           <div className="donate-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="donate-modal-close" onClick={() => setDonateOpen(false)} aria-label="Close">
+            <button
+              className="donate-modal-close"
+              onClick={() => { setDonateOpen(false); setDonationSuccess(null); }}
+              aria-label="Close"
+            >
               <X size={20} />
             </button>
-            <span className="eyebrow" style={{ color: 'var(--navy)', fontWeight: 700 }}>BETHANY LEPROSY MISSION ASSOCIATION</span>
-            <h2 style={{ fontSize: '24px', margin: '8px 0 12px', color: 'var(--navy)' }}>Partner with our Mission</h2>
-            <p style={{ fontSize: '14.5px', color: '#555', lineHeight: '1.6', marginBottom: '20px' }}>
-              Your donation provides free medical care, dignified livelihood, food, and safe shelter to elders and leprosy survivors across our community.
-            </p>
 
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-              {[500, 1000, 2500, 5000].map((amt) => (
+            {donationSuccess ? (
+              <div style={{ textAlign: 'center', padding: '12px 0' }}>
+                <CheckCircle2 size={46} color="#2db58e" style={{ margin: '0 auto 12px' }} />
+                <span className="eyebrow" style={{ color: 'var(--navy)', fontWeight: 700 }}>BETHANY LEPROSY MISSION ASSOCIATION</span>
+                <h2 style={{ fontSize: '22px', margin: '8px 0 10px', color: 'var(--navy)' }}>
+                  Thank You for Your Support!
+                </h2>
+                <p style={{ fontSize: '14.5px', color: '#555', lineHeight: '1.6', marginBottom: '16px' }}>
+                  Your contribution of <strong>₹{donationAmount.toLocaleString('en-IN')}</strong> directly funds medical care, wholesome nutrition, and dignified livelihoods for our elderly and leprosy-affected weavers.
+                </p>
+                <div style={{ background: '#f7f6f2', padding: '12px 16px', borderRadius: '6px', fontSize: '12.5px', color: '#666', marginBottom: '20px' }}>
+                  Payment ID: <strong>{donationSuccess}</strong><br />
+                  80G tax deduction receipt will be issued for your contribution.
+                </div>
                 <button
-                  key={amt}
                   type="button"
-                  onClick={() => setDonationAmount(amt)}
-                  className={`amt-select-btn ${donationAmount === amt ? 'selected' : ''}`}
+                  onClick={() => { setDonateOpen(false); setDonationSuccess(null); }}
+                  className="button full"
+                  style={{ background: 'var(--navy)', color: '#fff', height: '46px', fontSize: '14px', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
                 >
-                  ₹{amt.toLocaleString('en-IN')}
+                  Close
                 </button>
-              ))}
-            </div>
+              </div>
+            ) : (
+              <>
+                <span className="eyebrow" style={{ color: 'var(--navy)', fontWeight: 700 }}>BETHANY LEPROSY MISSION ASSOCIATION</span>
+                <h2 style={{ fontSize: '24px', margin: '8px 0 12px', color: 'var(--navy)' }}>Partner with our Mission</h2>
+                <p style={{ fontSize: '14.5px', color: '#555', lineHeight: '1.6', marginBottom: '20px' }}>
+                  Your donation provides free medical care, dignified livelihood, food, and safe shelter to elders and leprosy survivors across our community.
+                </p>
 
-            <div style={{ background: '#f7f6f2', padding: '16px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #e2ded4', fontSize: '13.5px' }}>
-              <div><strong>Tax Exemption:</strong> 80G Tax Deductible receipt will be issued for all Indian donations.</div>
-              <div style={{ marginTop: '6px', color: '#666' }}>Direct UPI / Netbanking: <strong>bethany.mission@sbi</strong></div>
-            </div>
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                  {[500, 1000, 2500, 5000].map((amt) => (
+                    <button
+                      key={amt}
+                      type="button"
+                      onClick={() => setDonationAmount(amt)}
+                      className={`amt-select-btn ${donationAmount === amt ? 'selected' : ''}`}
+                    >
+                      ₹{amt.toLocaleString('en-IN')}
+                    </button>
+                  ))}
+                </div>
 
-            <a
-              href={`https://wa.me/918000123456?text=${encodeURIComponent(`Hello Bethany Looms, I would like to make a contribution of ₹${donationAmount} to support the Bethany Leprosy Mission Association.`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="button full"
-              style={{ background: 'var(--navy)', color: '#fff', height: '48px', fontSize: '15px' }}
-            >
-              Proceed to Donate ₹{donationAmount.toLocaleString('en-IN')}
-            </a>
+                <div style={{ background: '#f7f6f2', padding: '16px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #e2ded4', fontSize: '13.5px' }}>
+                  <div><strong>Tax Exemption:</strong> 80G Tax Deductible receipt will be issued for all Indian donations.</div>
+                  <div style={{ marginTop: '6px', color: '#666' }}>Pay securely via UPI QR, Google Pay, PhonePe, Cards or Netbanking on Razorpay.</div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleProceedDonate}
+                  disabled={donating}
+                  className="button full"
+                  style={{ background: 'var(--navy)', color: '#fff', height: '48px', fontSize: '15px', fontWeight: 600, border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                >
+                  {donating ? 'Opening Razorpay Gateway…' : `Proceed to Donate ₹${donationAmount.toLocaleString('en-IN')} via Razorpay`}
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}

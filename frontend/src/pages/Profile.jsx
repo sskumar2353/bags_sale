@@ -55,7 +55,15 @@ export default function Profile() {
         setOrdersLoading(true);
         orderService
           .getOrders()
-          .then(setOrders)
+          .then((data) => {
+            // Strictly show only orders where payment was completed and ordered successfully
+            const paidOrders = (data || []).filter(
+              (o) =>
+                o.payment_status === 'paid' ||
+                (o.status && ['confirmed', 'shipped', 'delivered'].includes(o.status.toLowerCase()))
+            );
+            setOrders(paidOrders);
+          })
           .catch((err) => console.warn('Could not fetch orders', err))
           .finally(() => setOrdersLoading(false));
       } else if (activeTab === 'addresses') {

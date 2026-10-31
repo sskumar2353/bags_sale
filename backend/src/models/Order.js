@@ -60,8 +60,9 @@ export const Order = {
   },
 
   async findByUserId(userId) {
+    // Strictly show only orders where payment was completed successfully
     const [orders] = await pool.query(
-      'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC',
+      "SELECT * FROM orders WHERE user_id = ? AND payment_status = 'paid' ORDER BY created_at DESC",
       [userId]
     );
 

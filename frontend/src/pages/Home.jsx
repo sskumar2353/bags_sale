@@ -365,14 +365,14 @@ export default function Home() {
               <Link to="/shop" className="btn-ochre">
                 Shop now
               </Link>
-              <a
-                href="https://wa.me/918000123456?text=Hello%20Bethany%20Looms,%20I%20would%20like%20to%20donate%20to%20support%20the%20Bethany%20Leprosy%20Mission%20Association."
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => document.querySelector('.donate-pill-btn')?.click()}
                 className="btn-donate-white"
+                style={{ cursor: 'pointer', border: 'none' }}
               >
-                Donate [₹500 / ₹1,000]
-              </a>
+                Donate directly via Razorpay →
+              </button>
             </div>
           </div>
         </div>
