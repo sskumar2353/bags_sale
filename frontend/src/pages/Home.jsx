@@ -5,6 +5,107 @@ import productService from '../services/productService';
 import useCart from '../hooks/useCart';
 import CategoryStoryBar from '../components/home/CategoryStoryBar';
 
+function HomeCollectionCard({ product, onAddToCart, isJustAdded }) {
+  const [activeSwatchImage, setActiveSwatchImage] = useState(null);
+  const [activeSwatchId, setActiveSwatchId] = useState(null);
+
+  const formattedPrice = `₹${Number(product.price || 0).toLocaleString('en-IN')}`;
+  const defaultImage = product.primary_image || (product.images && product.images[0]?.image_url) || product.image_url;
+  const imageSrc = activeSwatchImage || defaultImage;
+
+  return (
+    <div className="bethany-product-card">
+      <Link to={`/product/${product.slug}`} className="product-img-box">
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={product.name}
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              e.currentTarget.parentElement.classList.add('weave-pattern-indigo');
+            }}
+          />
+        ) : (
+          <div className="weave-pattern-indigo" style={{ width: '100%', height: '100%' }} />
+        )}
+      </Link>
+
+      <div className="product-info-box">
+        <h3 className="product-card-title">
+          <Link to={`/product/${product.slug}`}>{product.name}</Link>
+        </h3>
+        <p className="product-card-sub">
+          {product.short_description || product.category || 'Handwoven · skin-safe dyed tapes'}
+        </p>
+
+        {product.variants && product.variants.length > 0 && (
+          <div style={{ display: 'flex', gap: '6px', margin: '6px 0 10px', alignItems: 'center' }}>
+            {product.variants
+              .filter((v) => v.color_code)
+              .slice(0, 5)
+              .map((v, i) => {
+                const isSelected = activeSwatchId === v.id;
+                return (
+                  <button
+                    key={v.id || i}
+                    type="button"
+                    style={{
+                      background: v.color_code,
+                      width: '14px',
+                      height: '14px',
+                      borderRadius: '50%',
+                      border: isSelected ? '2px solid var(--bethany-navy, #1e2d4a)' : '1px solid #d5cfc1',
+                      cursor: 'pointer',
+                      padding: 0,
+                      outline: isSelected ? '1px solid var(--bethany-ochre, #e5ad42)' : 'none',
+                      outlineOffset: '1px',
+                      transition: 'transform 0.15s ease'
+                    }}
+                    title={v.color_name || 'Color option'}
+                    onMouseEnter={() => {
+                      if (v.image_url) {
+                        setActiveSwatchImage(v.image_url);
+                        setActiveSwatchId(v.id);
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (v.image_url) {
+                        setActiveSwatchImage(v.image_url);
+                        setActiveSwatchId(v.id);
+                      }
+                    }}
+                  />
+                );
+              })}
+          </div>
+        )}
+
+        <div className="product-card-footer" style={{ marginTop: 'auto' }}>
+          <span className="product-price-val">{formattedPrice}</span>
+          <button
+            type="button"
+            className="btn-card-add"
+            onClick={(e) => onAddToCart(e, product)}
+            aria-label={`Add ${product.name} to cart`}
+          >
+            {isJustAdded ? (
+              <>
+                <Check size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
+                Added
+              </>
+            ) : (
+              'Add to cart'
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
@@ -271,59 +372,14 @@ export default function Home() {
             </div>
           ) : (
             <div className="bethany-product-grid">
-              {categoryShowcase.map((p) => {
-                const isJustAdded = addedId === p.id;
-                const formattedPrice = `₹${Number(p.price || 0).toLocaleString('en-IN')}`;
-                const imageSrc = p.primary_image || (p.images && p.images[0]?.image_url) || p.image_url;
-
-                return (
-                  <div key={p.id} className="bethany-product-card">
-                    <Link to={`/product/${p.slug}`} className="product-img-box">
-                      {imageSrc ? (
-                        <img
-                          src={imageSrc}
-                          alt={p.name}
-                          loading="lazy"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            e.currentTarget.parentElement.classList.add('weave-pattern-indigo');
-                          }}
-                        />
-                      ) : (
-                        <div className="weave-pattern-indigo" style={{ width: '100%', height: '100%' }} />
-                      )}
-                    </Link>
-
-                    <div className="product-info-box">
-                      <h3 className="product-card-title">
-                        <Link to={`/product/${p.slug}`}>{p.name}</Link>
-                      </h3>
-                      <p className="product-card-sub">
-                        {p.category || 'Handwoven · skin-safe dyed tapes'}
-                      </p>
-
-                      <div className="product-card-footer">
-                        <span className="product-price-val">{formattedPrice}</span>
-                        <button
-                          type="button"
-                          className="btn-card-add"
-                          onClick={(e) => handleAddToCart(e, p)}
-                          aria-label={`Add ${p.name} to cart`}
-                        >
-                          {isJustAdded ? (
-                            <>
-                              <Check size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
-                              Added
-                            </>
-                          ) : (
-                            'Add to cart'
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {categoryShowcase.map((p) => (
+                <HomeCollectionCard
+                  key={p.id}
+                  product={p}
+                  onAddToCart={handleAddToCart}
+                  isJustAdded={addedId === p.id}
+                />
+              ))}
             </div>
           )}
         </div>

@@ -109,6 +109,7 @@ export default function ProductDetails() {
           images={product.images || []}
           fallbackImage={product.image}
           title={product.name}
+          activeVariantImage={selectedVariant?.image_url}
         />
 
         <div>

@@ -71,6 +71,15 @@ export async function setupDatabase() {
       await runSqlFile(connection, seedPath);
     }
 
+    const bethanySeedPath = fs.existsSync(path.resolve('database', 'seed_bethany_catalog.sql'))
+      ? path.resolve('database', 'seed_bethany_catalog.sql')
+      : path.resolve('..', 'database', 'seed_bethany_catalog.sql');
+
+    if (fs.existsSync(bethanySeedPath)) {
+      console.log('Applying official Bethany Looms catalog from seed_bethany_catalog.sql...');
+      await runSqlFile(connection, bethanySeedPath);
+    }
+
     console.log('✓ Database setup and seeding complete.');
   } catch (err) {
     console.error('Database setup failed:', err.message);

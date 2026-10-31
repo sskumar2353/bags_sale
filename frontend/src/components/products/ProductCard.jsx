@@ -12,6 +12,8 @@ export default function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false);
   const [adding, setAdding] = useState(false);
   const [shared, setShared] = useState(false);
+  const [activeSwatchImage, setActiveSwatchImage] = useState(null);
+  const [activeSwatchId, setActiveSwatchId] = useState(null);
 
   const price = Number(product.price || 0);
   const mrp = Number(product.mrp || price);
@@ -64,7 +66,7 @@ export default function ProductCard({ product }) {
       <div className="product-image">
         <Link to={`/product/${product.slug}`} className="product-img-link" aria-label={`View details of ${product.name}`}>
           <img
-            src={isHovered && altImg ? altImg : primaryImg}
+            src={activeSwatchImage || (isHovered && altImg ? altImg : primaryImg)}
             alt={product.name}
             loading="lazy"
             className="main-product-img"
@@ -127,17 +129,46 @@ export default function ProductCard({ product }) {
         </div>
 
         {product.variants && product.variants.length > 0 && (
-          <div className="swatches">
+          <div className="swatches" style={{ display: 'flex', gap: '6px', marginTop: '6px', alignItems: 'center' }}>
             {product.variants
               .filter((v) => v.color_code)
               .slice(0, 5)
-              .map((v, i) => (
-                <i
-                  key={v.id || i}
-                  style={{ background: v.color_code }}
-                  title={v.color_name || 'Color option'}
-                />
-              ))}
+              .map((v, i) => {
+                const isSelected = activeSwatchId === v.id;
+                return (
+                  <button
+                    key={v.id || i}
+                    type="button"
+                    style={{
+                      background: v.color_code,
+                      width: '14px',
+                      height: '14px',
+                      borderRadius: '50%',
+                      border: isSelected ? '2px solid var(--bethany-navy, #1e2d4a)' : '1px solid #d5cfc1',
+                      cursor: 'pointer',
+                      padding: 0,
+                      outline: isSelected ? '1px solid var(--bethany-ochre, #e5ad42)' : 'none',
+                      outlineOffset: '1px',
+                      transition: 'transform 0.15s ease'
+                    }}
+                    title={v.color_name || 'Color option'}
+                    onMouseEnter={() => {
+                      if (v.image_url) {
+                        setActiveSwatchImage(v.image_url);
+                        setActiveSwatchId(v.id);
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (v.image_url) {
+                        setActiveSwatchImage(v.image_url);
+                        setActiveSwatchId(v.id);
+                      }
+                    }}
+                  />
+                );
+              })}
           </div>
         )}
       </div>
