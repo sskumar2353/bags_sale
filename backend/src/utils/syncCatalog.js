@@ -29,7 +29,9 @@ ON DUPLICATE KEY UPDATE
     sort_order = VALUES(sort_order),
     is_active = 1;
 
--- 3. Truncate variants and images, then insert 60 clean products
+-- 3. Truncate variants, images, cart, wishlist, then insert 60 clean products
+DELETE FROM cart_items;
+DELETE FROM wishlist_items;
 DELETE FROM product_variants;
 DELETE FROM product_images;
 DELETE FROM products;
@@ -416,6 +418,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 export async function runCatalogMigration() {
   console.log('🔄 Executing 60-product 12-category Bethany Looms migration against connected database...');
+  const conn = await pool.getConnection();
   const statements = BETHANY_SEED_SQL
     .replace(/--.*$/gm, '')
     .split(/;\s*[\r\n]+/)
@@ -423,13 +426,21 @@ export async function runCatalogMigration() {
     .filter((s) => s.length > 0);
 
   let executed = 0;
-  for (const stmt of statements) {
-    try {
-      await pool.query(stmt);
-      executed++;
-    } catch (err) {
-      console.warn('[Migration Statement Warning]:', err.message);
+  const errors = [];
+  try {
+    await conn.query('SET FOREIGN_KEY_CHECKS = 0');
+    for (const stmt of statements) {
+      try {
+        await conn.query(stmt);
+        executed++;
+      } catch (err) {
+        console.warn('[Migration Statement Warning]:', err.message);
+        errors.push({ error: err.message, snippet: stmt.substring(0, 100) });
+      }
     }
+    await conn.query('SET FOREIGN_KEY_CHECKS = 1');
+  } finally {
+    conn.release();
   }
 
   const [[products]] = await pool.query("SELECT COUNT(*) as count FROM products WHERE is_active = 1");
@@ -441,6 +452,7 @@ export async function runCatalogMigration() {
   return {
     success: true,
     statementsExecuted: executed,
+    errors,
     activeBethanyProducts: products.count,
     activeVariants: variants.count,
     activeCategories: categories.count,

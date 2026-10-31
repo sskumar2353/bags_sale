@@ -26,7 +26,9 @@ ON DUPLICATE KEY UPDATE
     sort_order = VALUES(sort_order),
     is_active = 1;
 
--- 3. Truncate variants and images, then insert 60 clean products
+-- 3. Truncate variants, images, cart, wishlist, then insert 60 clean products
+DELETE FROM cart_items;
+DELETE FROM wishlist_items;
 DELETE FROM product_variants;
 DELETE FROM product_images;
 DELETE FROM products;
