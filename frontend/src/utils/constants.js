@@ -18,11 +18,19 @@ export const CATEGORIES = [
 ];
 
 export const NAV_LINKS = [
-  { label: 'TECH', to: '/category/tech' },
-  { label: 'WORK ESSENTIALS', to: '/category/work-essentials' },
-  { label: 'GIFTING', to: '/gifting', hasGiftBow: true },
-  { label: 'COLLECTIONS', to: '/shop' },
-  { label: 'NEW ARRIVALS', to: '/shop?sort=newest' }
+  { label: 'Shop', to: '/shop' },
+  { label: 'Our Story', to: '/#our-story' },
+  { label: 'Your Impact', to: '/#impact' },
+  { label: 'Gifting', to: '/gifting' },
+  { label: 'Contact', to: '/pages/contact-us' }
+];
+
+export const NAV_LINKS_TE = [
+  { label: 'షాప్ (Shop)', to: '/shop' },
+  { label: 'మా కథ (Our Story)', to: '/#our-story' },
+  { label: 'ప్రభావం (Impact)', to: '/#impact' },
+  { label: 'బహుమతులు (Gifting)', to: '/gifting' },
+  { label: 'సంప్రదించండి (Contact)', to: '/pages/contact-us' }
 ];
 
 export const ORDER_STATUSES = [

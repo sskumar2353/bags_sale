@@ -1,25 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, X, Search, UserRound, ShoppingBag, Shield, Globe } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, Search, UserRound, ShoppingBag, Shield, Heart } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 import useCart from '../../hooks/useCart';
 import SearchBar from './SearchBar';
-import { NAV_LINKS } from '../../utils/constants';
-
-const NAV_LINKS_HI = [
-  { label: 'टेक (TECH)', to: '/category/tech' },
-  { label: 'कार्य आवश्यकताएं (WORK)', to: '/category/work-essentials' },
-  { label: 'उपहार (GIFTING)', to: '/gifting', hasGiftBow: true },
-  { label: 'कलेक्शंस (COLLECTIONS)', to: '/shop' },
-  { label: 'नए आगमन (NEW)', to: '/shop?sort=newest' }
-];
+import { NAV_LINKS, NAV_LINKS_TE } from '../../utils/constants';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [donateOpen, setDonateOpen] = useState(false);
+  const [donationAmount, setDonationAmount] = useState(1000);
   const [lang, setLang] = useState(() => localStorage.getItem('site_lang') || 'en');
   const { user, isAdmin } = useAuth();
   const { itemCount } = useCart();
+  const location = useLocation();
 
   useEffect(() => {
     const saved = localStorage.getItem('site_lang') || 'en';
@@ -27,13 +22,24 @@ export default function Navbar() {
   }, []);
 
   const toggleLanguage = () => {
-    const nextLang = lang === 'en' ? 'hi' : 'en';
+    const nextLang = lang === 'en' ? 'te' : 'en';
     setLang(nextLang);
     localStorage.setItem('site_lang', nextLang);
     document.documentElement.lang = nextLang;
   };
 
-  const navItems = lang === 'hi' ? NAV_LINKS_HI : NAV_LINKS;
+  const navItems = lang === 'te' ? NAV_LINKS_TE : NAV_LINKS;
+
+  const handleNavLinkClick = (to) => {
+    setMenuOpen(false);
+    if (to.startsWith('/#')) {
+      const targetId = to.replace('/#', '');
+      if (location.pathname === '/') {
+        const el = document.getElementById(targetId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <>
@@ -46,38 +52,11 @@ export default function Navbar() {
           {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
 
-        {/* Brand Logo with DO geometric glyph + stacked Daily Objects */}
-        <Link to="/" className="brand-logo" onClick={() => setMenuOpen(false)} aria-label="Daily Objects Home">
-          <svg
-            className="brand-glyph"
-            width="38"
-            height="22"
-            viewBox="0 0 38 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            {/* Geometric D mark */}
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M0 0H9.5C14.7 0 19 4.3 19 9.5V12.5C19 17.7 14.7 22 9.5 22H0V0ZM5.5 5.5V16.5H9.5C11.7 16.5 13.5 14.7 13.5 12.5V9.5C13.5 7.3 11.7 5.5 9.5 5.5H5.5Z"
-              fill="#000000"
-            />
-            {/* Geometric O top arc */}
-            <path
-              d="M21.5 9C21.5 4 25.5 0 30.5 0C35.5 0 39.5 4 39.5 9H34.5C34.5 6.5 32.7 4.8 30.5 4.8C28.3 4.8 26.5 6.5 26.5 9H21.5Z"
-              fill="#000000"
-            />
-            {/* Geometric O bottom arc */}
-            <path
-              d="M21.5 13H26.5C26.5 15.5 28.3 17.2 30.5 17.2C32.7 17.2 34.5 15.5 34.5 13H39.5C39.5 18 35.5 22 30.5 22C25.5 22 21.5 18 21.5 13Z"
-              fill="#000000"
-            />
-          </svg>
-          <div className="brand-text">
-            <span className="brand-daily">Daily</span>
-            <span className="brand-objects">Objects</span>
+        {/* Brand Logo: Bethany Looms (A project of Bethany Leprosy Mission Association) */}
+        <Link to="/" className="brand-logo" onClick={() => setMenuOpen(false)} aria-label="Bethany Looms Home">
+          <div className="brand-text-bethany">
+            <span className="brand-name">Bethany Looms</span>
+            <span className="brand-subname">A project of Bethany Leprosy Mission Association</span>
           </div>
         </Link>
 
@@ -87,30 +66,9 @@ export default function Navbar() {
             <Link
               key={link.label}
               to={link.to}
-              className={link.hasGiftBow ? 'nav-item nav-item-gifting' : 'nav-item'}
-              onClick={() => setMenuOpen(false)}
+              className="nav-item"
+              onClick={() => handleNavLinkClick(link.to)}
             >
-              {link.hasGiftBow && (
-                <span className="nav-gift-bow" aria-hidden="true">
-                  <svg width="42" height="11" viewBox="0 0 42 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="0" y1="5.5" x2="16" y2="5.5" stroke="#2db58e" strokeWidth="1.6" strokeLinecap="round" />
-                    <path
-                      d="M21 5.5 C18 5.5, 16 1.8, 18.5 1.2 C20.2 0.8, 21.2 3.8, 21 5.5 Z"
-                      stroke="#2db58e"
-                      strokeWidth="1.4"
-                      fill="none"
-                    />
-                    <path
-                      d="M21 5.5 C24 5.5, 26 1.8, 23.5 1.2 C21.8 0.8, 20.8 3.8, 21 5.5 Z"
-                      stroke="#2db58e"
-                      strokeWidth="1.4"
-                      fill="none"
-                    />
-                    <circle cx="21" cy="5.5" r="1.4" fill="#2db58e" />
-                    <line x1="26" y1="5.5" x2="42" y2="5.5" stroke="#2db58e" strokeWidth="1.6" strokeLinecap="round" />
-                  </svg>
-                </span>
-              )}
               <span className="nav-item-label">{link.label}</span>
             </Link>
           ))}
@@ -120,23 +78,32 @@ export default function Navbar() {
               to="/admin/dashboard"
               className="nav-item admin-nav-link"
               onClick={() => setMenuOpen(false)}
-              style={{ color: '#a98761', fontWeight: 'bold' }}
+              style={{ color: 'var(--accent)', fontWeight: 'bold' }}
             >
               <Shield size={14} style={{ display: 'inline', marginRight: '4px' }} />
               ADMIN
             </Link>
           )}
 
-          {/* Quick links in mobile drawer */}
+          {/* Mobile Drawer Actions */}
           <div className="mobile-drawer-footer">
             <button
               className="mobile-lang-btn"
               onClick={toggleLanguage}
               type="button"
-              aria-label={`Switch language. Current language: ${lang === 'en' ? 'English' : 'Hindi'}`}
+              aria-label="Switch language"
             >
-              <Globe size={16} />
-              <span>{lang === 'en' ? 'भाषा: हिंदी में बदलें' : 'Language: Switch to English'}</span>
+              <span>{lang === 'en' ? 'భాష: తెలుగులోకి మార్చండి' : 'Language: Switch to English'}</span>
+            </button>
+            <button
+              className="button button-outline"
+              style={{ width: '100%', marginBottom: '10px' }}
+              onClick={() => {
+                setMenuOpen(false);
+                setDonateOpen(true);
+              }}
+            >
+              Donate
             </button>
             <Link to="/wishlist" onClick={() => setMenuOpen(false)}>Wishlist</Link>
             <Link to={user ? '/profile' : '/login'} onClick={() => setMenuOpen(false)}>
@@ -145,17 +112,33 @@ export default function Navbar() {
           </div>
         </nav>
 
-        {/* Right Action Icons matching screenshot: Language Switcher, Search, Profile, Shopping Bag */}
+        {/* Right Action Items: Donate, Cart, Search, Profile, Language */}
         <div className="header-actions">
+          {/* Donate Pill Button */}
           <button
-            className="lang-switcher-pill"
+            type="button"
+            className="donate-pill-btn"
+            onClick={() => setDonateOpen(true)}
+            aria-label="Donate directly to mission"
+          >
+            <Heart size={14} fill="#e5ad42" color="#e5ad42" />
+            <span>Donate</span>
+          </button>
+
+          {/* Cart Pill Button matching PDF */}
+          <Link className="cart-pill-btn" to="/cart" aria-label="Shopping Cart">
+            <span>Cart ({itemCount})</span>
+          </Link>
+
+          {/* Language Switcher */}
+          <button
+            className="lang-pill-btn"
             onClick={toggleLanguage}
             type="button"
-            aria-label={`Current language: ${lang === 'en' ? 'English' : 'Hindi'}. Click to switch.`}
-            title="Toggle English / हिंदी"
+            aria-label="Switch language between English and Telugu"
+            title="English · తెలుగు"
           >
-            <Globe size={15} />
-            <span className="lang-text">{lang === 'en' ? 'EN' : 'हिं'}</span>
+            {lang === 'en' ? 'తెలుగు' : 'EN'}
           </button>
 
           <button
@@ -163,7 +146,7 @@ export default function Navbar() {
             onClick={() => setSearchOpen(!searchOpen)}
             aria-label="Search products"
           >
-            <Search size={22} strokeWidth={1.8} />
+            <Search size={20} strokeWidth={1.8} />
           </button>
 
           <Link
@@ -171,17 +154,56 @@ export default function Navbar() {
             to={user ? '/profile' : '/login'}
             aria-label="My Account"
           >
-            <UserRound size={22} strokeWidth={1.8} />
-          </Link>
-
-          <Link className="icon-btn cart-btn" to="/cart" aria-label="Shopping Cart">
-            <ShoppingBag size={22} strokeWidth={1.8} />
-            {itemCount > 0 && <span className="count">{itemCount}</span>}
+            <UserRound size={20} strokeWidth={1.8} />
           </Link>
         </div>
       </header>
 
       {searchOpen && <SearchBar onClose={() => setSearchOpen(false)} />}
+
+      {/* Quick Donation Modal */}
+      {donateOpen && (
+        <div className="donate-modal-overlay" onClick={() => setDonateOpen(false)}>
+          <div className="donate-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="donate-modal-close" onClick={() => setDonateOpen(false)} aria-label="Close">
+              <X size={20} />
+            </button>
+            <span className="eyebrow" style={{ color: 'var(--navy)', fontWeight: 700 }}>BETHANY LEPROSY MISSION ASSOCIATION</span>
+            <h2 style={{ fontSize: '24px', margin: '8px 0 12px', color: 'var(--navy)' }}>Partner with our Mission</h2>
+            <p style={{ fontSize: '14.5px', color: '#555', lineHeight: '1.6', marginBottom: '20px' }}>
+              Your donation provides free medical care, dignified livelihood, food, and safe shelter to elders and leprosy survivors across our community.
+            </p>
+
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+              {[500, 1000, 2500, 5000].map((amt) => (
+                <button
+                  key={amt}
+                  type="button"
+                  onClick={() => setDonationAmount(amt)}
+                  className={`amt-select-btn ${donationAmount === amt ? 'selected' : ''}`}
+                >
+                  ₹{amt.toLocaleString('en-IN')}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ background: '#f7f6f2', padding: '16px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #e2ded4', fontSize: '13.5px' }}>
+              <div><strong>Tax Exemption:</strong> 80G Tax Deductible receipt will be issued for all Indian donations.</div>
+              <div style={{ marginTop: '6px', color: '#666' }}>Direct UPI / Netbanking: <strong>bethany.mission@sbi</strong></div>
+            </div>
+
+            <a
+              href={`https://wa.me/918000123456?text=${encodeURIComponent(`Hello Bethany Looms, I would like to make a contribution of ₹${donationAmount} to support the Bethany Leprosy Mission Association.`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="button full"
+              style={{ background: 'var(--navy)', color: '#fff', height: '48px', fontSize: '15px' }}
+            >
+              Proceed to Donate ₹{donationAmount.toLocaleString('en-IN')}
+            </a>
+          </div>
+        </div>
+      )}
     </>
   );
 }

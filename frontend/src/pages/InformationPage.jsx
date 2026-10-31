@@ -21,73 +21,79 @@ export default function InformationPage() {
   const pages = {
     'contact-us': {
       title: 'Contact Us',
-      eyebrow: 'CUSTOMER CARE · WE’RE HERE FOR YOU',
+      eyebrow: 'BETHANY LOOMS · WE’RE HERE TO HELP',
       render: () => (
         <div style={{ maxWidth: '680px' }}>
           <p style={{ fontSize: '16px', lineHeight: '1.7', color: '#444', marginBottom: '24px' }}>
-            We are always here to assist with your inquiries, order status, custom monogramming, or after-sales care.
+            We welcome your questions regarding our handwoven collections, custom bulk orders, corporate gifting, or mission donations.
           </p>
-          <div style={{ background: '#f7f6f2', padding: '24px', borderRadius: '8px', marginBottom: '28px', border: '1px solid #e5e3dc' }}>
-            <h2 style={{ fontSize: '18px', marginBottom: '16px', fontWeight: 600 }}>Direct Contact Information</h2>
+          <div style={{ background: '#f7f6f2', padding: '24px', borderRadius: '8px', marginBottom: '28px', border: '1px solid #e2ded4' }}>
+            <h2 style={{ fontSize: '18px', marginBottom: '16px', fontWeight: 600, color: 'var(--navy)' }}>Direct Contact Information</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '15px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Mail size={18} color="#2db58e" />
-                <span>Email: <a href="mailto:support@dailyobjects.example" style={{ textDecoration: 'underline', color: 'inherit' }}>support@dailyobjects.example</a></span>
+                <Mail size={18} color="var(--navy)" />
+                <span>Email: <a href="mailto:care@bethanylooms.org" style={{ textDecoration: 'underline', color: 'inherit' }}>care@bethanylooms.org</a></span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Phone size={18} color="#2db58e" />
-                <span>Phone: <a href="tel:+918000123456" style={{ textDecoration: 'underline', color: 'inherit' }}>+91 8000 123 456</a></span>
+                <Phone size={18} color="var(--navy)" />
+                <span>Phone & WhatsApp: <a href="tel:+918000123456" style={{ textDecoration: 'underline', color: 'inherit' }}>+91 8000 123 456</a> (<a href="https://wa.me/918000123456" target="_blank" rel="noreferrer" style={{ textDecoration: 'underline' }}>Chat on WhatsApp</a>)</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <MapPin size={18} color="#2db58e" />
-                <span>Corporate Office: Daily Objects Design Lab Pvt. Ltd., Okhla Industrial Area, Phase-III, New Delhi 110020, India</span>
+                <MapPin size={18} color="var(--navy)" />
+                <span>Mission Center: Bethany Leprosy Mission Association, Bapatla / Hyderabad, Andhra Pradesh & Telangana, India</span>
               </div>
             </div>
           </div>
-          <a className="button button-dark" href="mailto:support@dailyobjects.example" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-            Send Us an Email <ArrowRight size={16} />
+          <a className="btn-ochre" href="https://wa.me/918000123456" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+            Message us on WhatsApp <ArrowRight size={16} />
           </a>
         </div>
       )
     },
     'about-us': {
-      title: 'About Daily Objects',
-      eyebrow: 'OBJECTS FOR LIFE IN MOTION',
+      title: 'Our Story',
+      eyebrow: 'BETHANY LEPROSY MISSION ASSOCIATION',
       render: () => (
         <div style={{ maxWidth: '780px' }}>
-          <p style={{ fontSize: '18px', lineHeight: '1.7', color: '#222', marginBottom: '24px', fontWeight: 500 }}>
-            Daily Objects crafts thoughtfully designed bags, sleeves, and accessories made to elevate every transition of your workday and weekend.
+          <p style={{ fontSize: '18px', lineHeight: '1.7', color: 'var(--navy)', marginBottom: '24px', fontWeight: 600 }}>
+            Skill has no stigma. Dignity can be woven back.
+          </p>
+          <p style={{ fontSize: '15.5px', lineHeight: '1.7', color: '#444', marginBottom: '20px' }}>
+            Bethany Looms is the handcraft initiative of the Bethany Leprosy Mission Association, which runs primary healthcare and a caring home for people affected by leprosy and for elders who have no one to turn to in Andhra Pradesh and Telangana.
+          </p>
+          <p style={{ fontSize: '15.5px', lineHeight: '1.7', color: '#444', marginBottom: '28px' }}>
+            For many of our residents, the world once said, "You can't." Here, with patient hands and steady looms, they answer, "Watch me." When you buy a bag, you give a family medicine, a meal, a roof and a reason to smile.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', margin: '32px 0' }}>
-            <div style={{ background: '#fbfbfa', border: '1px solid #e5e3dc', padding: '24px', borderRadius: '8px' }}>
+            <div style={{ background: '#ffffff', border: '1px solid #e2ded4', padding: '24px', borderRadius: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                <Compass size={22} color="#9a764d" />
-                <h2 style={{ fontSize: '18px', margin: 0, fontWeight: 700 }}>Our Mission</h2>
+                <Compass size={22} color="var(--accent)" />
+                <h2 style={{ fontSize: '18px', margin: 0, fontWeight: 700, color: 'var(--navy)' }}>Our Mission</h2>
               </div>
               <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#555' }}>
-                To create utilitarian, enduring carry essentials that seamlessly bridge minimalist aesthetics, functional organization, and resilient modern materials.
+                To empower leprosy survivors and destitute elders through dignified, fair-wage handloom weaving, restoring self-worth and lifelong community care.
               </p>
             </div>
 
-            <div style={{ background: '#fbfbfa', border: '1px solid #e5e3dc', padding: '24px', borderRadius: '8px' }}>
+            <div style={{ background: '#ffffff', border: '1px solid #e2ded4', padding: '24px', borderRadius: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                <HeartHandshake size={22} color="#2db58e" />
-                <h2 style={{ fontSize: '18px', margin: 0, fontWeight: 700 }}>Our Vision</h2>
+                <HeartHandshake size={22} color="var(--navy)" />
+                <h2 style={{ fontSize: '18px', margin: 0, fontWeight: 700, color: 'var(--navy)' }}>Our Vision</h2>
               </div>
               <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#555' }}>
-                To establish India's premier homegrown design studio for everyday lifestyle goods, setting global benchmarks for durability, customer delight, and ethical production.
+                An inclusive world free from social stigma where every elder and artisan has access to respectful work, compassionate medical aid, and a loving home.
               </p>
             </div>
           </div>
 
-          <div style={{ background: '#f7f6f2', padding: '24px', borderRadius: '8px', border: '1px solid #e5e3dc', marginTop: '24px' }}>
+          <div style={{ background: '#f7f6f2', padding: '24px', borderRadius: '12px', border: '1px solid #e2ded4', marginTop: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-              <ShieldCheck size={20} color="#121212" />
-              <h2 style={{ fontSize: '17px', margin: 0, fontWeight: 700 }}>Operating Entity & Brand Overview</h2>
+              <ShieldCheck size={20} color="var(--navy)" />
+              <h2 style={{ fontSize: '17px', margin: 0, fontWeight: 700, color: 'var(--navy)' }}>Operating Entity & Registrations</h2>
             </div>
             <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#444' }}>
-              <strong>Daily Objects Design Lab Pvt. Ltd.</strong> is a design-led lifestyle brand founded in New Delhi, India. We are committed to creating thoughtfully engineered carry products using resilient materials, precision hardware, and sustainable production practices.
+              <strong>Bethany Leprosy Mission Association</strong> is a registered non-profit institution under the Societies Registration Act. Contributions are eligible for 80G and 12A tax deductions under the Income Tax Act. FCRA registered.
             </p>
           </div>
         </div>
@@ -280,7 +286,7 @@ export default function InformationPage() {
                 Company & Policies
               </h2>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <li><Link to="/pages/about-us" style={{ color: '#121212', textDecoration: 'underline' }}>About Daily Objects</Link></li>
+                <li><Link to="/pages/about-us" style={{ color: '#121212', textDecoration: 'underline' }}>About Bethany Looms</Link></li>
                 <li><Link to="/pages/privacy-policy" style={{ color: '#121212', textDecoration: 'underline' }}>Privacy Policy</Link></li>
                 <li><Link to="/pages/terms-and-conditions" style={{ color: '#121212', textDecoration: 'underline' }}>Terms & Conditions</Link></li>
               </ul>
@@ -291,28 +297,28 @@ export default function InformationPage() {
     },
     shipping: {
       title: 'Shipping & Delivery Policy',
-      eyebrow: 'DAILY OBJECTS · FULFILLMENT',
+      eyebrow: 'BETHANY LOOMS · FULFILLMENT',
       render: () => (
         <div style={{ maxWidth: '640px' }}>
           <p style={{ fontSize: '16px', lineHeight: '1.7', color: '#444', marginBottom: '16px' }}>
             All domestic orders above ₹1,499 receive complimentary express shipping across India. Standard delivery takes 2–4 business days depending on your postal code.
           </p>
           <p style={{ fontSize: '15px', lineHeight: '1.6', color: '#666' }}>
-            We partner with verified express logistics providers (BlueDart, Delhivery, XpressBees) with real-time SMS and email tracking updates.
+            We partner with verified express logistics providers with real-time SMS and email tracking updates. Every piece is packed in sustainable plastic-free packaging.
           </p>
         </div>
       )
     },
     returns: {
       title: 'Easy Returns & Exchanges',
-      eyebrow: 'DAILY OBJECTS · 7-DAY PROMISE',
+      eyebrow: 'BETHANY LOOMS · CARE PROMISE',
       render: () => (
         <div style={{ maxWidth: '640px' }}>
           <p style={{ fontSize: '16px', lineHeight: '1.7', color: '#444', marginBottom: '16px' }}>
             We offer a 7-day hassle-free return window for all unused carry pieces in their original packaging with tags intact.
           </p>
           <p style={{ fontSize: '15px', lineHeight: '1.6', color: '#666' }}>
-            Once your return request is submitted, our courier executive will schedule a doorstep pickup within 24–48 hours. Refunds are credited to the original payment source or UPI within 3 business days of receipt.
+            Once your return request is submitted, our courier executive will schedule a doorstep pickup. Refunds are credited to the original payment source or UPI within 3 business days of receipt.
           </p>
         </div>
       )
@@ -323,30 +329,30 @@ export default function InformationPage() {
       render: () => (
         <div style={{ maxWidth: '680px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div style={{ border: '1px solid #e5e3dc', borderRadius: '6px', padding: '16px' }}>
+            <h2 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '6px' }}>Who weaves these bags?</h2>
+            <p style={{ fontSize: '14px', color: '#555', margin: 0 }}>Every bag is woven by hand on traditional looms by leprosy-affected individuals and elders in the care of the Bethany Leprosy Mission Association in Andhra Pradesh & Telangana.</p>
+          </div>
+          <div style={{ border: '1px solid #e5e3dc', borderRadius: '6px', padding: '16px' }}>
             <h2 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '6px' }}>How can I track my order?</h2>
             <p style={{ fontSize: '14px', color: '#555', margin: 0 }}>Sign in to your account and open My Orders, or check the shipment tracking link sent to your registered email and mobile number.</p>
           </div>
           <div style={{ border: '1px solid #e5e3dc', borderRadius: '6px', padding: '16px' }}>
-            <h2 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '6px' }}>Are your bags water-resistant?</h2>
-            <p style={{ fontSize: '14px', color: '#555', margin: 0 }}>Yes, our premium canvas and technical ballistic nylon fabrics feature a water-repellent coating designed to withstand rain and spills.</p>
-          </div>
-          <div style={{ border: '1px solid #e5e3dc', borderRadius: '6px', padding: '16px' }}>
-            <h2 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '6px' }}>What payment methods are supported?</h2>
-            <p style={{ fontSize: '14px', color: '#555', margin: 0 }}>We accept UPI (Google Pay, PhonePe, Paytm, BHIM), all major Credit & Debit cards (Visa, Mastercard, RuPay), Netbanking, and PayLater.</p>
+            <h2 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '6px' }}>Are donations tax exempt?</h2>
+            <p style={{ fontSize: '14px', color: '#555', margin: 0 }}>Yes, all direct donations are eligible for 80G tax deductions under the Income Tax Act.</p>
           </div>
         </div>
       )
     },
     'privacy-policy': {
       title: 'Privacy Policy',
-      eyebrow: 'DATA PROTECTION & ENCRYPTION',
+      eyebrow: 'DATA PROTECTION & PRIVACY',
       render: () => (
         <div style={{ maxWidth: '680px' }}>
           <p style={{ fontSize: '15px', lineHeight: '1.7', color: '#444', marginBottom: '14px' }}>
             We respect your privacy. Customer information is securely encrypted with 256-bit SSL encryption and used strictly for order fulfillment, fraud prevention, and account maintenance.
           </p>
           <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#666' }}>
-            We do not sell, rent, or trade your personal data with third-party advertising brokers. You may request account or data deletion at any time by contacting our data protection officer at support@dailyobjects.example.
+            We do not sell, rent, or trade your personal data. You may request account or data deletion at any time by contacting us at care@bethanylooms.org.
           </p>
         </div>
       )
@@ -360,7 +366,7 @@ export default function InformationPage() {
             All product pricing and availability are updated in real-time. Orders are officially confirmed upon server verification of payment.
           </p>
           <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#666' }}>
-            All disputes are subject to the exclusive jurisdiction of the competent courts in New Delhi, India. Daily Objects reserves the right to cancel suspicious orders or orders placed with fraudulent credentials.
+            Bethany Looms is an initiative of Bethany Leprosy Mission Association, operating in full compliance with all applicable Indian consumer and e-commerce laws.
           </p>
         </div>
       )
@@ -369,10 +375,10 @@ export default function InformationPage() {
 
   const page = pages[slug] || {
     title: 'Information',
-    eyebrow: 'DAILY OBJECTS · CUSTOMER CARE',
+    eyebrow: 'BETHANY LOOMS · CUSTOMER CARE',
     render: () => (
       <p style={{ color: '#555' }}>
-        This page is being updated. Contact support@dailyobjects.example for immediate assistance.
+        This page is being updated. Contact care@bethanylooms.org for immediate assistance.
       </p>
     )
   };

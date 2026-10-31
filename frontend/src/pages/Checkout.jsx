@@ -115,7 +115,7 @@ export default function Checkout() {
           key: keyId || RAZORPAY_KEY_ID,
           amount: razorpayOrder.amount,
           currency: razorpayOrder.currency || 'INR',
-          name: 'Daily Objects',
+          name: 'Bethany Looms',
           description: `Order ${orderNumber}`,
           order_id: razorpayOrder.id,
           prefill: {

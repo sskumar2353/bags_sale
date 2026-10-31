@@ -61,15 +61,15 @@ export default function Gifting() {
         <div className="gifting-hero-content">
           <div className="gifting-badge-tag">
             <Gift size={14} className="gift-pulse-icon" />
-            <span>DAILY OBJECTS GIFT STUDIO</span>
+            <span>BETHANY LOOMS GIFT STUDIO</span>
           </div>
 
           <h1 className="gifting-title">
-            Art of Thoughtful <span>Gifting</span>
+            Gifting that <span>means more</span>
           </h1>
 
           <p className="gifting-subtitle">
-            Unwrap refined carry pieces crafted for lifetime utility. Each order above ₹4,499 receives our signature complimentary Mystery Gift.
+            Weddings, housewarmings, festivals, corporate gifts and return gifts. A Bethany Looms gift says, "I chose something beautiful and kind." Custom bulk orders welcome.
           </p>
 
           {/* Interactive 3D Gift Box with Motion Graphics */}

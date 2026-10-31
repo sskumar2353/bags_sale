@@ -7,17 +7,24 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --ink: #181916;
-  --muted: #6b6d64;
-  --line: #e5e3dc;
-  --paper: #ffffff;
-  --soft: #f7f6f2;
-  --accent: #9a764d;
-  --accent-hover: #83623d;
+  --ink: #1b2a47;
+  --muted: #5a677d;
+  --line: #e2ded4;
+  --paper: #f6f4ee;
+  --paper-white: #ffffff;
+  --soft: #eeeae0;
+  --accent: #e5ad42;
+  --accent-hover: #cf982e;
+  --navy: #1e2d4a;
+  --navy-deep: #142038;
+  --terracotta: #a24845;
+  --forest-sage: #3d6c57;
+  --olive-earth: #6b5a36;
+  --potli-rose: #aa5568;
   --space: clamp(20px, 4vw, 64px);
   --container: 1440px;
-  --radius: 4px;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --radius: 6px;
+  --shadow: 0 10px 30px rgba(27, 42, 71, 0.08);
   --ease: all 0.25s cubic-bezier(0.2, 0.65, 0.3, 1);
 }
 
@@ -40,7 +47,7 @@ body {
   font-size: 15px;
   line-height: 1.6;
   color: var(--ink);
-  background: #ffffff;
+  background: var(--paper);
 }
 
 button,

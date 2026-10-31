@@ -79,7 +79,7 @@ export default function Profile() {
             View your order history, live track parcels, and manage saved delivery addresses.
           </p>
           <Link to="/login" className="button button-dark full">
-            Sign In to Daily Objects
+            Sign In to Bethany Looms
           </Link>
         </div>
       </main>

@@ -43,7 +43,7 @@ export default function Login() {
 
   return (
     <main className="page auth-page" style={{ paddingTop: '24px' }}>
-      <span className="eyebrow">DAILY OBJECTS ACCOUNT</span>
+      <span className="eyebrow">BETHANY LOOMS ACCOUNT</span>
       <h1>Welcome back.</h1>
       <p>Sign in to see your saved pieces, addresses, and orders.</p>
 

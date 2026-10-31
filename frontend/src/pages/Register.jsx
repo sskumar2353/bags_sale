@@ -44,7 +44,7 @@ export default function Register() {
 
   return (
     <main className="page auth-page" style={{ paddingTop: '24px' }}>
-      <span className="eyebrow">DAILY OBJECTS ACCOUNT</span>
+      <span className="eyebrow">BETHANY LOOMS ACCOUNT</span>
       <h1>A little more personal.</h1>
       <p>Create an account to keep track of the good things.</p>
 
