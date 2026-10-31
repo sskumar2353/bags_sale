@@ -1,16 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Search, UserRound, ShoppingBag, Shield } from 'lucide-react';
+import { Menu, X, Search, UserRound, ShoppingBag, Shield, Globe } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 import useCart from '../../hooks/useCart';
 import SearchBar from './SearchBar';
 import { NAV_LINKS } from '../../utils/constants';
 
+const NAV_LINKS_HI = [
+  { label: 'टेक (TECH)', to: '/category/tech' },
+  { label: 'कार्य आवश्यकताएं (WORK)', to: '/category/work-essentials' },
+  { label: 'उपहार (GIFTING)', to: '/gifting', hasGiftBow: true },
+  { label: 'कलेक्शंस (COLLECTIONS)', to: '/shop' },
+  { label: 'नए आगमन (NEW)', to: '/shop?sort=newest' }
+];
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [lang, setLang] = useState(() => localStorage.getItem('site_lang') || 'en');
   const { user, isAdmin } = useAuth();
   const { itemCount } = useCart();
+
+  useEffect(() => {
+    const saved = localStorage.getItem('site_lang') || 'en';
+    document.documentElement.lang = saved;
+  }, []);
+
+  const toggleLanguage = () => {
+    const nextLang = lang === 'en' ? 'hi' : 'en';
+    setLang(nextLang);
+    localStorage.setItem('site_lang', nextLang);
+    document.documentElement.lang = nextLang;
+  };
+
+  const navItems = lang === 'hi' ? NAV_LINKS_HI : NAV_LINKS;
 
   return (
     <>
@@ -60,7 +83,7 @@ export default function Navbar() {
 
         {/* Center Nav Links */}
         <nav className={menuOpen ? 'nav open' : 'nav'}>
-          {NAV_LINKS.map((link) => (
+          {navItems.map((link) => (
             <Link
               key={link.label}
               to={link.to}
@@ -106,6 +129,15 @@ export default function Navbar() {
 
           {/* Quick links in mobile drawer */}
           <div className="mobile-drawer-footer">
+            <button
+              className="mobile-lang-btn"
+              onClick={toggleLanguage}
+              type="button"
+              aria-label={`Switch language. Current language: ${lang === 'en' ? 'English' : 'Hindi'}`}
+            >
+              <Globe size={16} />
+              <span>{lang === 'en' ? 'भाषा: हिंदी में बदलें' : 'Language: Switch to English'}</span>
+            </button>
             <Link to="/wishlist" onClick={() => setMenuOpen(false)}>Wishlist</Link>
             <Link to={user ? '/profile' : '/login'} onClick={() => setMenuOpen(false)}>
               {user ? 'My Account' : 'Sign In'}
@@ -113,8 +145,19 @@ export default function Navbar() {
           </div>
         </nav>
 
-        {/* Right Action Icons matching screenshot: Search, Profile, Shopping Bag */}
+        {/* Right Action Icons matching screenshot: Language Switcher, Search, Profile, Shopping Bag */}
         <div className="header-actions">
+          <button
+            className="lang-switcher-pill"
+            onClick={toggleLanguage}
+            type="button"
+            aria-label={`Current language: ${lang === 'en' ? 'English' : 'Hindi'}. Click to switch.`}
+            title="Toggle English / हिंदी"
+          >
+            <Globe size={15} />
+            <span className="lang-text">{lang === 'en' ? 'EN' : 'हिं'}</span>
+          </button>
+
           <button
             className="icon-btn"
             onClick={() => setSearchOpen(!searchOpen)}

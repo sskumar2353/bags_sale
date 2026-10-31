@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, ShoppingBag } from 'lucide-react';
+import { Heart, ShoppingBag, Share2, Check } from 'lucide-react';
 import useWishlist from '../../hooks/useWishlist';
 import useCart from '../../hooks/useCart';
 import formatPrice from '../../utils/formatPrice';
@@ -11,6 +11,7 @@ export default function ProductCard({ product }) {
   const wished = isInWishlist(product.id);
   const [isHovered, setIsHovered] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [shared, setShared] = useState(false);
 
   const price = Number(product.price || 0);
   const mrp = Number(product.mrp || price);
@@ -33,6 +34,27 @@ export default function ProductCard({ product }) {
     }
   };
 
+  const handleShare = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const shareUrl = `${window.location.origin}/product/${product.slug}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: product.name,
+          text: `Check out ${product.name} on Daily Objects`,
+          url: shareUrl
+        });
+      } catch {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        setShared(true);
+        setTimeout(() => setShared(false), 2000);
+      } catch {}
+    }
+  };
+
   return (
     <article
       className="product-card"
@@ -40,7 +62,7 @@ export default function ProductCard({ product }) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="product-image">
-        <Link to={`/product/${product.slug}`} className="product-img-link">
+        <Link to={`/product/${product.slug}`} className="product-img-link" aria-label={`View details of ${product.name}`}>
           <img
             src={isHovered && altImg ? altImg : primaryImg}
             alt={product.name}
@@ -59,21 +81,32 @@ export default function ProductCard({ product }) {
           </span>
         )}
 
-        <button
-          className={`wish-btn ${wished ? 'active' : ''}`}
-          onClick={(e) => {
-            e.preventDefault();
-            toggleWishlist(product);
-          }}
-          aria-label={wished ? 'Remove from wishlist' : 'Save to wishlist'}
-        >
-          <Heart size={18} fill={wished ? '#e66b55' : 'none'} color={wished ? '#e66b55' : '#121212'} />
-        </button>
+        <div className="card-top-actions">
+          <button
+            className={`wish-btn ${wished ? 'active' : ''}`}
+            onClick={(e) => {
+              e.preventDefault();
+              toggleWishlist(product);
+            }}
+            aria-label={wished ? 'Remove from wishlist' : 'Save to wishlist'}
+          >
+            <Heart size={18} fill={wished ? '#e66b55' : 'none'} color={wished ? '#e66b55' : '#121212'} />
+          </button>
+
+          <button
+            className="share-btn"
+            onClick={handleShare}
+            aria-label={`Share ${product.name}`}
+            title={shared ? 'Link Copied!' : 'Share piece'}
+          >
+            {shared ? <Check size={16} color="#2db58e" /> : <Share2 size={16} color="#121212" />}
+          </button>
+        </div>
 
         <button
           className="quick-add-btn"
           onClick={handleQuickAdd}
-          aria-label="Add to bag"
+          aria-label={`Add ${product.name} to bag`}
         >
           <ShoppingBag size={14} style={{ marginRight: '6px' }} />
           {adding ? 'ADDED!' : 'QUICK ADD'}
@@ -81,12 +114,11 @@ export default function ProductCard({ product }) {
       </div>
 
       <div className="product-meta">
-        {/* DailyObjects Free Mystery Gift Tag */}
         <span className="product-subtitle-tag">FREE MYSTERY GIFT</span>
 
-        <div className="product-title-row">
+        <h3 className="product-title-row" style={{ fontSize: '15px', fontWeight: '700', margin: '4px 0' }}>
           <Link to={`/product/${product.slug}`}>{product.name}</Link>
-        </div>
+        </h3>
 
         <div className="price-line">
           <strong>{formatPrice(price)}</strong>

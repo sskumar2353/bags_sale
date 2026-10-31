@@ -1,4 +1,5 @@
-import { ShieldCheck, Compass, Sparkles, RefreshCw } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ShieldCheck, Compass, Sparkles, RefreshCw, Target, Eye, Building2, ArrowRight } from 'lucide-react';
 
 const STEPS = [
   {
@@ -40,6 +41,7 @@ export default function WhyOnlyWe() {
         </p>
       </div>
 
+      {/* 4 Craftsmanship Steps */}
       <div className="why-steps-grid">
         {STEPS.map((item) => {
           const Icon = item.icon;
@@ -56,6 +58,61 @@ export default function WhyOnlyWe() {
             </div>
           );
         })}
+      </div>
+
+      {/* Organisation Mission, Vision & Operating Entity (UX4G & GIGW Compliance) */}
+      <div
+        className="mission-vision-wrapper"
+        style={{
+          maxWidth: 'var(--container)',
+          margin: '48px auto 0',
+          background: '#ffffff',
+          border: '1px solid #e7e5df',
+          borderRadius: '8px',
+          padding: 'clamp(24px, 4vw, 36px)',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '28px'
+        }}
+      >
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+            <Target size={20} color="#2db58e" />
+            <h3 style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>
+              Our Mission
+            </h3>
+          </div>
+          <p style={{ fontSize: '13.5px', color: '#55574e', lineHeight: '1.6', margin: 0 }}>
+            To engineer refined, durable carry pieces that eliminate clutter, enhance mobility, and elevate everyday routines through human-centered ergonomic design.
+          </p>
+        </div>
+
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+            <Eye size={20} color="#2db58e" />
+            <h3 style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>
+              Our Vision
+            </h3>
+          </div>
+          <p style={{ fontSize: '13.5px', color: '#55574e', lineHeight: '1.6', margin: 0 }}>
+            To be India’s premier design-forward lifestyle carry house, establishing global standards in sustainable manufacturing, resilient textiles, and timeless utility.
+          </p>
+        </div>
+
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+            <Building2 size={20} color="#2db58e" />
+            <h3 style={{ fontSize: '16px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>
+              Operating Entity
+            </h3>
+          </div>
+          <p style={{ fontSize: '13.5px', color: '#55574e', lineHeight: '1.6', margin: '0 0 10px' }}>
+            Operated by <strong>Daily Objects Design Lab Pvt. Ltd.</strong> (HQ: New Delhi, India). Dedicated to ethical craftsmanship and lifetime utility.
+          </p>
+          <Link to="/pages/about-us" className="text-link" style={{ fontSize: '12.5px', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+            Learn more about our organisation <ArrowRight size={14} />
+          </Link>
+        </div>
       </div>
     </section>
   );

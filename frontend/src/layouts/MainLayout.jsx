@@ -9,6 +9,9 @@ export default function MainLayout() {
 
   return (
     <div className="site-wrapper">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <AnnouncementBar />
       <Navbar />
 
@@ -38,7 +41,7 @@ export default function MainLayout() {
         </div>
       )}
 
-      <main className="main-content">
+      <main className="main-content" id="main-content" tabIndex="-1">
         <Outlet />
       </main>
 

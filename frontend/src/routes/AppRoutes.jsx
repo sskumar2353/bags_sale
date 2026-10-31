@@ -55,6 +55,10 @@ export default function AppRoutes() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/pages/:slug" element={<InformationPage />} />
+        <Route path="/feedback" element={<Navigate to="/pages/feedback" replace />} />
+        <Route path="/sitemap" element={<Navigate to="/pages/sitemap" replace />} />
+        <Route path="/contact" element={<Navigate to="/pages/contact-us" replace />} />
+        <Route path="/about" element={<Navigate to="/pages/about-us" replace />} />
       </Route>
 
       {/* Admin Portal Authentication */}

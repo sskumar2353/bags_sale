@@ -529,3 +529,199 @@
   color: #55574e;
   margin-bottom: 28px;
 }
+
+/* Accessibility: Skip to Main Content Link & Screen-Reader Helpers */
+.skip-link {
+  position: absolute;
+  top: -120px;
+  left: 16px;
+  background: #121212;
+  color: #ffffff;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  z-index: 99999;
+  border-radius: 4px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  transition: top 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.skip-link:focus {
+  top: 16px;
+  outline: 3px solid #2db58e;
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Product Card Top Actions (Wishlist & Share) */
+.card-top-actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 4;
+}
+
+.share-btn {
+  border: 0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.94);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.share-btn:hover {
+  transform: scale(1.08);
+  background: #ffffff;
+}
+
+/* Footer Navigation & Accessibility (UX4G & GIGW 44px Touch Targets) */
+.footer-heading {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 16px;
+  color: var(--ink);
+}
+
+.footer-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links-list li {
+  margin: 0;
+}
+
+.footer-links-list li a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px 0;
+  font-size: 13.5px;
+  color: #55574e;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.footer-links-list li a:hover {
+  color: #121212;
+  transform: translateX(4px);
+}
+
+.footer-newsletter-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+  color: #555555;
+  text-transform: uppercase;
+}
+
+.newsletter-input-group {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.newsletter-input-group input {
+  width: 100%;
+  height: 48px;
+  padding: 0 54px 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-size: 14px;
+  background: #ffffff;
+  color: #121212;
+}
+
+.newsletter-input-group button {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  bottom: 4px;
+  width: 44px;
+  background: #121212;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.2s ease;
+}
+
+.newsletter-input-group button:hover {
+  background: #2db58e;
+}
+
+/* Multilingual Switcher (UX4G & GIGW compliance) */
+.lang-switcher-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  min-width: 44px;
+  padding: 0 12px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: #fbfbfa;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lang-switcher-pill:hover {
+  background: #ffffff;
+  border-color: #121212;
+}
+
+.lang-text {
+  letter-spacing: 0.05em;
+  font-size: 12px;
+}
+
+.mobile-lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: #f7f6f2;
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.mobile-lang-btn:hover {
+  background: #eae8e1;
+}

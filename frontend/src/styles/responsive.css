@@ -241,25 +241,37 @@
   .value-grid p {
     font-size: 13.5px;
   }
+  .footer {
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
   .footer-top {
     grid-template-columns: 1fr;
     gap: 28px;
     padding-top: 40px;
     padding-bottom: 36px;
+    width: 100%;
+    box-sizing: border-box;
   }
   .footer-brand {
     grid-column: span 1;
+    max-width: 100%;
+    word-break: break-word;
   }
   .footer-news {
     grid-column: span 1;
+    max-width: 100%;
   }
-  .footer-top h4 {
+  .footer-top h3,
+  .footer-top h4,
+  .footer-heading {
     font-size: 13px;
     margin-bottom: 12px;
   }
   .footer-top a {
     font-size: 14px;
-    margin: 10px 0;
+    margin: 4px 0;
   }
   .footer-bottom {
     font-size: 12.5px;
