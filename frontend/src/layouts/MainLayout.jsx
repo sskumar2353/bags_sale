@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import AccessibilityHeader from '../components/common/AccessibilityHeader';
 import AnnouncementBar from '../components/common/AnnouncementBar';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -9,9 +10,7 @@ export default function MainLayout() {
 
   return (
     <div className="site-wrapper">
-      <a href="#main-content" className="skip-link">
-        Skip to main content
-      </a>
+      <AccessibilityHeader />
       <AnnouncementBar />
       <Navbar />
 

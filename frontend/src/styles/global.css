@@ -725,3 +725,194 @@
 .mobile-lang-btn:hover {
   background: #eae8e1;
 }
+
+/* ========================================================
+   UX4G / GIGW 3.0 Government Accessibility Toolbar
+   ======================================================== */
+.gov-accessibility-bar {
+  background: #111827;
+  color: #f3f4f6;
+  font-size: 11.5px;
+  border-bottom: 1px solid #374151;
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+}
+
+.gov-bar-container {
+  max-width: var(--container, 1440px);
+  margin: 0 auto;
+  padding: 0 var(--space, 24px);
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gov-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.gov-emblem {
+  display: flex;
+  align-items: center;
+}
+
+.gov-text {
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+  color: #f9fafb;
+}
+
+.gov-subtext {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.ux4g-badge-link {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(45, 181, 142, 0.16);
+  border: 1px solid rgba(45, 181, 142, 0.4);
+  color: #34d399;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+  transition: all 0.2s ease;
+}
+
+.ux4g-badge-link:hover {
+  background: rgba(45, 181, 142, 0.3);
+  color: #ffffff;
+}
+
+.gov-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gov-skip-link {
+  color: #e5e7eb;
+  text-decoration: underline;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.gov-skip-link:focus {
+  outline: 2px solid #2db58e;
+  outline-offset: 2px;
+}
+
+.gov-control-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #1f2937;
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: 1px solid #374151;
+}
+
+.control-label {
+  display: flex;
+  align-items: center;
+  color: #9ca3af;
+  margin-right: 2px;
+}
+
+.gov-btn {
+  background: transparent;
+  color: #e5e7eb;
+  border: 1px solid transparent;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.gov-btn:hover {
+  background: #374151;
+  color: #ffffff;
+}
+
+.gov-btn.active {
+  background: #2db58e;
+  color: #ffffff;
+}
+
+.gov-contrast-btn {
+  background: #1f2937;
+  border: 1px solid #374151;
+  padding: 3px 8px;
+}
+
+.gov-lang-btn {
+  background: #2db58e;
+  color: #ffffff;
+  border: none;
+  padding: 3px 9px;
+  font-weight: 700;
+  border-radius: 4px;
+}
+
+.gov-lang-btn:hover {
+  background: #239272;
+}
+
+@media (max-width: 768px) {
+  .gov-subtext {
+    display: none;
+  }
+  .gov-control-group {
+    display: none;
+  }
+  .gov-contrast-btn {
+    display: none;
+  }
+}
+
+/* ========================================================
+   High Contrast Mode (WCAG 2.1 AAA Accessibility)
+   ======================================================== */
+body.high-contrast {
+  background-color: #000000 !important;
+  color: #ffff00 !important;
+}
+
+body.high-contrast header,
+body.high-contrast footer,
+body.high-contrast nav,
+body.high-contrast .page,
+body.high-contrast .product-card,
+body.high-contrast .summary,
+body.high-contrast .why-card {
+  background: #000000 !important;
+  color: #ffff00 !important;
+  border-color: #ffff00 !important;
+}
+
+body.high-contrast a,
+body.high-contrast button {
+  color: #ffff00 !important;
+  border-color: #ffff00 !important;
+}
+
+body.high-contrast .button-dark,
+body.high-contrast .gov-lang-btn {
+  background: #ffff00 !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
