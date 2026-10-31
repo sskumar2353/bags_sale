@@ -16,6 +16,11 @@ export const productService = {
     return res.data;
   },
 
+  async getCategoryBySlug(slug) {
+    const res = await api.get(`/categories/${encodeURIComponent(slug)}`);
+    return res.data;
+  },
+
   // Admin endpoints
   async adminGetProducts() {
     const res = await api.get('/admin/products');

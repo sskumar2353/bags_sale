@@ -371,7 +371,7 @@ export default function Home() {
                 className="btn-donate-white"
                 style={{ cursor: 'pointer', border: 'none' }}
               >
-                Donate directly via Razorpay →
+                Donate 
               </button>
             </div>
           </div>

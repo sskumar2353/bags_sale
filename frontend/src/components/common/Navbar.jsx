@@ -288,7 +288,7 @@ export default function Navbar() {
                   className="button full"
                   style={{ background: 'var(--navy)', color: '#fff', height: '48px', fontSize: '15px', fontWeight: 600, border: 'none', borderRadius: '6px', cursor: 'pointer' }}
                 >
-                  {donating ? 'Opening Razorpay Gateway…' : `Proceed to Donate ₹${donationAmount.toLocaleString('en-IN')} via Razorpay`}
+                  {donating ? 'Opening Razorpay Gateway…' : `Proceed to Donate ₹${donationAmount.toLocaleString('en-IN')}`}
                 </button>
               </>
             )}

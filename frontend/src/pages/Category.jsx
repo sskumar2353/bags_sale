@@ -66,28 +66,35 @@ export default function Category() {
   const [searchParams, setSearchParams] = useSearchParams();
   const sortParam = searchParams.get('sort') || 'recommended';
 
+  const [categoryMeta, setCategoryMeta] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeSubcategory, setActiveSubcategory] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  const categoryTitle = CATEGORY_NAMES[slug] || decodeURIComponent(slug || '').toUpperCase();
+  const categoryTitle = categoryMeta?.name
+    ? categoryMeta.name.toUpperCase()
+    : (CATEGORY_NAMES[slug] || decodeURIComponent(slug || '').replace(/-/g, ' ').toUpperCase());
   const subcategories = SUBCATEGORIES_CONFIG[slug] || [];
 
   useEffect(() => {
     let active = true;
-    async function fetchCategoryProducts() {
+    async function fetchCategoryData() {
       try {
         setLoading(true);
         setError(null);
-        const data = await productService.getProducts({
-          category: slug,
-          sort: sortParam,
-          inStock: 'true'
-        });
+        const [catData, prodData] = await Promise.all([
+          productService.getCategoryBySlug(slug).catch(() => null),
+          productService.getProducts({
+            category: slug,
+            sort: sortParam,
+            inStock: 'true'
+          })
+        ]);
         if (active) {
-          const availableData = (data || []).filter(
+          if (catData) setCategoryMeta(catData);
+          const availableData = (prodData || []).filter(
             (p) => p.stock_quantity === undefined || p.stock_quantity > 0
           );
           setProducts(availableData);
@@ -101,7 +108,7 @@ export default function Category() {
       }
     }
 
-    fetchCategoryProducts();
+    fetchCategoryData();
     return () => {
       active = false;
     };
