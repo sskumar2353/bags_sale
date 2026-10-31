@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import { createOrder, verifyPayment, createDonationOrder } from '../controllers/paymentController.js';
+import { createOrder, verifyPayment, createDonationOrder, validateCoupon } from '../controllers/paymentController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = Router();
 
-// Public donation order route (no auth required so any supporter can donate)
+// Public routes (no auth required)
 router.post('/donate', createDonationOrder);
+router.post('/validate-coupon', validateCoupon);
 
 router.use(authMiddleware);
 

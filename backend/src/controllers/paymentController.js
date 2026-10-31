@@ -28,14 +28,65 @@ export const createDonationOrder = async (req, res, next) => {
   }
 };
 
+export const validateCoupon = async (req, res) => {
+  try {
+    const { code, subtotal = 0 } = req.body;
+    if (!code) {
+      return res.status(400).json({ valid: false, message: 'Coupon code is required.' });
+    }
+
+    const normalized = String(code).trim().toUpperCase();
+    const numSubtotal = Number(subtotal) || 0;
+
+    if (normalized === 'MYSTERY4499') {
+      const discount = Math.min(500, numSubtotal);
+      return res.json({
+        valid: true,
+        code: 'MYSTERY4499',
+        discountAmount: discount,
+        description: 'Application Launch Special: ₹500 OFF + Free Mystery Gift',
+        hasMysteryGift: numSubtotal >= 4499
+      });
+    }
+
+    if (normalized === 'LAUNCH10' || normalized === 'BETHANY10') {
+      const discount = Math.round((numSubtotal * 0.1) * 100) / 100;
+      return res.json({
+        valid: true,
+        code: normalized,
+        discountAmount: discount,
+        description: 'Launch Celebration: 10% OFF'
+      });
+    }
+
+    if (normalized === 'WELCOME500') {
+      const discount = Math.min(500, numSubtotal);
+      return res.json({
+        valid: true,
+        code: 'WELCOME500',
+        discountAmount: discount,
+        description: 'Welcome Offer: ₹500 OFF'
+      });
+    }
+
+    return res.status(404).json({
+      valid: false,
+      message: 'Invalid coupon code. Try MYSTERY4499 to save ₹500!'
+    });
+  } catch {
+    res.status(500).json({ valid: false, message: 'Failed to validate coupon.' });
+  }
+};
+
 export const createOrder = async (req, res, next) => {
   try {
-    const { items, address, paymentMethod } = req.body;
+    const { items, address, paymentMethod, couponCode } = req.body;
     const result = await orderService.createCheckoutOrder({
       userId: req.user.id,
       items,
       address,
-      paymentMethod
+      paymentMethod,
+      couponCode
     });
     res.status(201).json(result);
   } catch (err) {

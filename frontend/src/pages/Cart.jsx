@@ -6,7 +6,19 @@ import CartSummary from '../components/cart/CartSummary';
 import EmptyState from '../components/common/EmptyState';
 
 export default function Cart() {
-  const { items, updateQuantity, removeFromCart, subtotal, shipping, total, itemCount } = useCart();
+  const {
+    items,
+    updateQuantity,
+    removeFromCart,
+    subtotal,
+    discount,
+    coupon,
+    applyCoupon,
+    removeCoupon,
+    shipping,
+    total,
+    itemCount
+  } = useCart();
 
   return (
     <main className="page">
@@ -37,6 +49,10 @@ export default function Cart() {
 
           <CartSummary
             subtotal={subtotal}
+            discount={discount}
+            coupon={coupon}
+            onApplyCoupon={applyCoupon}
+            onRemoveCoupon={removeCoupon}
             shipping={shipping}
             total={total}
             itemCount={itemCount}

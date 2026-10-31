@@ -39,7 +39,17 @@ function loadRazorpayScript() {
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { items, subtotal, shipping, total, clearCart } = useCart();
+  const {
+    items,
+    subtotal,
+    discount,
+    coupon,
+    shipping,
+    total,
+    clearCart,
+    applyCoupon,
+    removeCoupon
+  } = useCart();
   const { user, isAuthenticated } = useAuth();
 
   const [address, setAddress] = useState({
@@ -93,7 +103,8 @@ export default function Checkout() {
           quantity: i.quantity
         })),
         address,
-        paymentMethod
+        paymentMethod,
+        couponCode: coupon?.code || null
       };
 
       const orderData = await paymentService.createOrder(orderPayload);
@@ -214,6 +225,10 @@ export default function Checkout() {
             paymentMethod={paymentMethod}
             onChangePaymentMethod={setPaymentMethod}
             total={total}
+            discount={discount}
+            coupon={coupon}
+            onApplyCoupon={applyCoupon}
+            onRemoveCoupon={removeCoupon}
             busy={busy}
           />
 
@@ -244,8 +259,12 @@ export default function Checkout() {
         <OrderSummary
           items={items}
           subtotal={subtotal}
+          discount={discount}
+          coupon={coupon}
           shipping={shipping}
           total={total}
+          onApplyCoupon={applyCoupon}
+          onRemoveCoupon={removeCoupon}
         />
       </div>
     </main>

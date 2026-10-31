@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useCallback, useContext } from 'react';
 import { AuthContext } from './AuthContext';
 import cartService from '../services/cartService';
+import api from '../services/api';
 
 export const CartContext = createContext(null);
 
@@ -12,6 +13,14 @@ export function CartProvider({ children }) {
       return stored ? JSON.parse(stored) : [];
     } catch {
       return [];
+    }
+  });
+  const [coupon, setCoupon] = useState(() => {
+    try {
+      const stored = localStorage.getItem('do-coupon');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
     }
   });
   const [loading, setLoading] = useState(false);
@@ -160,12 +169,62 @@ export function CartProvider({ children }) {
       }
     }
     setItems([]);
+    setCoupon(null);
     localStorage.removeItem('do-cart');
+    localStorage.removeItem('do-coupon');
   };
 
   const subtotal = items.reduce((acc, item) => acc + Number(item.price) * Number(item.quantity), 0);
-  const shipping = items.length === 0 ? 0 : subtotal >= 1499 ? 0 : 99;
-  const total = subtotal + shipping;
+
+  const applyCoupon = async (code) => {
+    if (!code || !code.trim()) {
+      return { success: false, message: 'Please enter a coupon code.' };
+    }
+    const cleanCode = code.trim().toUpperCase();
+
+    try {
+      const res = await api.post('/payments/validate-coupon', {
+        code: cleanCode,
+        subtotal
+      });
+      const data = res.data;
+      if (data.valid) {
+        setCoupon(data);
+        localStorage.setItem('do-coupon', JSON.stringify(data));
+        showToast(`🎉 Coupon "${cleanCode}" applied! Saved ₹${data.discountAmount}.`);
+        return { success: true, coupon: data };
+      }
+    } catch {
+      // Graceful local validation for launch code
+      if (cleanCode === 'MYSTERY4499') {
+        const fallback = {
+          valid: true,
+          code: 'MYSTERY4499',
+          discountAmount: Math.min(500, subtotal),
+          description: 'Application Launch Special: ₹500 OFF + Free Mystery Gift',
+          hasMysteryGift: subtotal >= 4499
+        };
+        setCoupon(fallback);
+        localStorage.setItem('do-coupon', JSON.stringify(fallback));
+        showToast(`🎉 Launch coupon applied! Saved ₹${fallback.discountAmount}.`);
+        return { success: true, coupon: fallback };
+      }
+    }
+
+    return { success: false, message: 'Invalid or expired coupon code. Try MYSTERY4499!' };
+  };
+
+  const removeCoupon = () => {
+    setCoupon(null);
+    localStorage.removeItem('do-coupon');
+    showToast('Coupon removed.');
+  };
+
+  // Re-calculate discount based on active subtotal
+  const discount = coupon ? Math.min(subtotal, Number(coupon.discountAmount || 0)) : 0;
+  const discountedSubtotal = Math.max(0, subtotal - discount);
+  const shipping = items.length === 0 ? 0 : discountedSubtotal >= 1499 ? 0 : 99;
+  const total = items.length === 0 ? 0 : discountedSubtotal + shipping;
   const itemCount = items.reduce((acc, item) => acc + Number(item.quantity), 0);
 
   const value = {
@@ -174,8 +233,12 @@ export function CartProvider({ children }) {
     toastMessage,
     itemCount,
     subtotal,
+    coupon,
+    discount,
     shipping,
     total,
+    applyCoupon,
+    removeCoupon,
     addToCart,
     updateQuantity,
     removeFromCart,

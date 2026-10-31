@@ -5,7 +5,7 @@ import generateOrderId from '../utils/generateOrderId.js';
 import razorpayService from './razorpayService.js';
 
 export const orderService = {
-  async createCheckoutOrder({ userId, items, address, paymentMethod = 'razorpay' }) {
+  async createCheckoutOrder({ userId, items, address, paymentMethod = 'razorpay', couponCode = null }) {
     if (!Array.isArray(items) || items.length === 0) {
       throw new Error('At least one cart item is required.');
     }
@@ -82,17 +82,32 @@ export const orderService = {
         });
       }
 
+      // Verify promotional launch coupon
+      let discountAmount = 0;
+      if (couponCode) {
+        const normalized = String(couponCode).trim().toUpperCase();
+        if (normalized === 'MYSTERY4499') {
+          discountAmount = Math.min(500, subtotal);
+        } else if (normalized === 'LAUNCH10' || normalized === 'BETHANY10') {
+          discountAmount = Math.round((subtotal * 0.1) * 100) / 100;
+        } else if (normalized === 'WELCOME500') {
+          discountAmount = Math.min(500, subtotal);
+        }
+      }
+
       // Exact shipping calculation (Threshold: ₹1,499)
-      const shippingAmount = subtotal >= 1499 ? 0 : 99;
-      const totalAmount = subtotal + shippingAmount;
+      const discountedSubtotal = Math.max(0, subtotal - discountAmount);
+      const shippingAmount = discountedSubtotal >= 1499 ? 0 : 99;
+      const totalAmount = Math.max(1, discountedSubtotal + shippingAmount);
       const orderNumber = generateOrderId();
 
-      // Insert Order record
+      // Insert Order record with verified discount
       const orderId = await Order.create(
         {
           userId,
           orderNumber,
           subtotal,
+          discountAmount,
           shippingAmount,
           totalAmount,
           address,

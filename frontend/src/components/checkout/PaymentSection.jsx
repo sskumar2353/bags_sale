@@ -1,9 +1,13 @@
+import { Check, Tag, Sparkles } from 'lucide-react';
 import formatPrice from '../../utils/formatPrice';
 
 export default function PaymentSection({
   paymentMethod = 'razorpay',
   onChangePaymentMethod,
   total = 0,
+  discount = 0,
+  coupon = null,
+  onApplyCoupon,
   busy = false
 }) {
   return (
@@ -14,13 +18,14 @@ export default function PaymentSection({
         <label
           className="payment-option"
           style={{
-            border: paymentMethod === 'razorpay' ? '2px solid var(--ink)' : '1px solid var(--line)',
-            borderRadius: '4px',
+            border: paymentMethod === 'razorpay' ? '2px solid var(--navy, #1e2d4a)' : '1px solid var(--line)',
+            borderRadius: '6px',
             padding: '14px',
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            background: paymentMethod === 'razorpay' ? '#fcfbf8' : '#ffffff'
           }}
         >
           <input
@@ -31,43 +36,75 @@ export default function PaymentSection({
             onChange={(e) => onChangePaymentMethod(e.target.value)}
           />
           <div>
-            <strong>Razorpay Secure Checkout</strong>
+            <strong style={{ color: 'var(--navy, #1e2d4a)' }}>Razorpay Secure Checkout</strong>
             <span style={{ display: 'block', fontSize: '11px', color: 'var(--muted)' }}>
-              Supports UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, Netbanking
-            </span>
-          </div>
-        </label>
-
-        <label
-          className="payment-option"
-          style={{
-            border: paymentMethod === 'cod' ? '2px solid var(--ink)' : '1px solid var(--line)',
-            borderRadius: '4px',
-            padding: '14px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            cursor: 'pointer'
-          }}
-        >
-          <input
-            type="radio"
-            name="payment"
-            value="cod"
-            checked={paymentMethod === 'cod'}
-            onChange={(e) => onChangePaymentMethod(e.target.value)}
-          />
-          <div>
-            <strong>Cash on Delivery (Pay upon delivery)</strong>
-            <span style={{ display: 'block', fontSize: '11px', color: 'var(--muted)' }}>
-              Pay via cash or UPI directly when your bag is delivered
+              Supports UPI (Google Pay, PhonePe, Paytm, QR), Credit/Debit Cards, Netbanking
             </span>
           </div>
         </label>
       </div>
 
+      {/* Applied Coupon / Launch Offer Banner right before payment */}
+      {coupon ? (
+        <div
+          style={{
+            margin: '12px 0 16px',
+            padding: '10px 14px',
+            background: '#f0fdf4',
+            border: '1px solid #bbf7d0',
+            borderRadius: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontSize: '12.5px',
+            color: '#166534'
+          }}
+        >
+          <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Check size={15} /> <strong>{coupon.code}</strong> Applied: You save {formatPrice(discount)}!
+          </span>
+          <span style={{ fontSize: '11px', fontWeight: 700, color: '#15803d' }}>
+            Amount to Pay: {formatPrice(total)}
+          </span>
+        </div>
+      ) : onApplyCoupon ? (
+        <div
+          style={{
+            margin: '12px 0 16px',
+            padding: '10px 14px',
+            background: '#faf8f2',
+            border: '1px dashed #d5cfc1',
+            borderRadius: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontSize: '12px'
+          }}
+        >
+          <span style={{ color: '#444', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Sparkles size={14} color="#e5ad42" /> Launch coupon <strong>MYSTERY4499</strong> available!
+          </span>
+          <button
+            type="button"
+            onClick={() => onApplyCoupon('MYSTERY4499')}
+            style={{
+              background: 'var(--navy, #1e2d4a)',
+              color: '#ffffff',
+              border: 'none',
+              padding: '4px 10px',
+              borderRadius: '4px',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            Apply ₹500 Off
+          </button>
+        </div>
+      ) : null}
+
       <p className="payment-note" style={{ fontSize: '11px', color: 'var(--muted)', margin: '14px 0' }}>
-        Payments are secured via 256-bit encryption. Orders are officially confirmed upon server-side cryptographic signature verification.
+        Payments are secured via 256-bit SSL encryption. Official receipt and order details will be confirmed upon successful transaction.
       </p>
 
       <button
