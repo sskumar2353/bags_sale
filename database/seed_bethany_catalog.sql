@@ -3,24 +3,26 @@
 -- Clean 12-Product Artisan Line with Multi-Color Variants
 -- =========================================================
 
--- 1. Ensure Categories Exist
-INSERT INTO categories (parent_id, name, slug, description, image_url, sort_order)
+-- 1. Deactivate all old non-Bethany products and categories
+UPDATE products SET is_active = 0 WHERE sku NOT LIKE 'BL-%';
+UPDATE categories SET is_active = 0;
+
+-- 2. Ensure Official Bethany Categories Exist and are Active
+INSERT INTO categories (id, parent_id, name, slug, description, image_url, sort_order, is_active)
 VALUES
-    (NULL, 'Tote Bags', 'tote-bags', 'Handwoven shoulder bags, totes and everyday market carry.', 'https://images.dailyobjects.com/marche/product-images/1204/space-blue-idyll-tote-images/Space-Blue-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1),
-    (NULL, 'Crossbody Bags', 'crossbody-bags', 'Hands-free sling bags and crossbody carry for outings and travel.', 'https://images.dailyobjects.com/marche/product-images/1811/pivot-crossbody-sand-images/Pivot-Crossbody-Sand.png?tr=cm-pad_resize,v-3', 2),
-    (NULL, 'Messenger / Laptop Bags', 'messenger-laptop-bags', 'Padded protective laptop sleeves and work organizers.', 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 3),
-    (NULL, 'Phone Bags', 'phone-bags', 'Compact mobile pouches for phone, keys and earphones on the go.', 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-phone-bag.jpg?tr=cm-pad_crop,v-3', 4),
-    (NULL, 'Wallets', 'wallets', 'Coin purses, card wallets, and travel passport organizers.', 'https://images.dailyobjects.com/marche/assets/images/other/new-wallets.jpg?tr=cm-pad_crop,v-3', 5),
-    (NULL, 'Pouches', 'pouches', 'Utility pouches, cosmetic vanity organizers, and wedding potlis.', 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 6),
-    (NULL, 'Backpacks', 'backpacks', 'Artisan structured backpacks for daily commute and college.', 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-backpacks.jpg?tr=cm-pad_crop,v-3', 7)
+    (1, NULL, 'Tote Bags', 'tote-bags', 'Handwoven shoulder bags, totes, and everyday market carry.', 'https://images.dailyobjects.com/marche/product-images/1204/space-blue-idyll-tote-images/Space-Blue-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1, 1),
+    (2, NULL, 'Crossbody Bags', 'crossbody-bags', 'Hands-free sling bags and crossbody carry for outings and travel.', 'https://images.dailyobjects.com/marche/product-images/1811/pivot-crossbody-sand-images/Pivot-Crossbody-Sand.png?tr=cm-pad_resize,v-3', 2, 1),
+    (3, NULL, 'Messenger / Laptop Bags', 'messenger-laptop-bags', 'Padded protective laptop sleeves and work organizers.', 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 3, 1),
+    (4, NULL, 'Phone Bags', 'phone-bags', 'Compact mobile pouches for phone, keys, and earphones on the go.', 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-phone-bag.jpg?tr=cm-pad_crop,v-3', 4, 1),
+    (5, NULL, 'Wallets', 'wallets', 'Coin purses, card wallets, and travel passport organizers.', 'https://images.dailyobjects.com/marche/assets/images/other/new-wallets.jpg?tr=cm-pad_crop,v-3', 5, 1),
+    (6, NULL, 'Pouches', 'pouches', 'Utility pouches, cosmetic vanity organizers, and wedding potlis.', 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 6, 1),
+    (7, NULL, 'Gifting', 'gifting', 'Artisan gift sets and celebration bundles with meaningful social impact.', 'https://images.dailyobjects.com/marche/corporate-page/gifting-update.png?tr=cm-pad_resize,v-3', 7, 1)
 ON DUPLICATE KEY UPDATE 
     name = VALUES(name), 
     description = VALUES(description), 
     image_url = VALUES(image_url), 
-    sort_order = VALUES(sort_order);
-
--- 2. Deactivate previous generic placeholders to cleanly showcase the new 12 Bethany Looms products
-UPDATE products SET is_active = 0 WHERE sku NOT LIKE 'BL-%';
+    sort_order = VALUES(sort_order),
+    is_active = VALUES(is_active);
 
 -- 3. Insert / Update the 12 Official Bethany Looms Products
 INSERT INTO products (

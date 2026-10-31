@@ -12,6 +12,7 @@ import wishlistRoutes from './routes/wishlistRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import { runCatalogMigration } from './utils/syncCatalog.js';
 
 const app = express();
 
@@ -116,6 +117,16 @@ app.get('/api/health', async (_req, res) => {
   }
 });
 
+// Automatic & On-Demand Catalog Sync Endpoint
+app.all(['/api/system/migrate-bethany', '/system/migrate-bethany'], async (_req, res) => {
+  try {
+    const result = await runCatalogMigration();
+    res.json({ status: 'ok', ...result });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
+  }
+});
+
 // Mount Routes
 app.use('/api/auth', rateLimiter(25, 60 * 1000), authRoutes);
 app.use('/api/categories', categoryRoutes);
@@ -142,8 +153,24 @@ app.use(errorMiddleware);
 const port = Number(process.env.PORT || 5000);
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(port, () => {
+  app.listen(port, async () => {
     console.log(`Daily Objects API listening on http://localhost:${port}`);
+    try {
+      const [[prodCheck]] = await pool.query(
+        "SELECT COUNT(*) as count FROM products WHERE sku LIKE 'BL-%' AND is_active = 1"
+      );
+      const [[catCheck]] = await pool.query(
+        "SELECT COUNT(*) as count FROM categories WHERE is_active = 1 AND slug = 'backpacks'"
+      );
+      if (!prodCheck || prodCheck.count < 12 || (catCheck && catCheck.count > 0)) {
+        console.log('🔄 Initializing Bethany Looms catalog on connected database...');
+        await runCatalogMigration();
+      } else {
+        console.log(`✓ Database ready with ${prodCheck.count} active Bethany Looms products.`);
+      }
+    } catch (err) {
+      console.warn('Database initialization check warning:', err.message);
+    }
   });
 }
 

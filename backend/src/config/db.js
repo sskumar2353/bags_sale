@@ -9,6 +9,7 @@ const dbConfig = process.env.DATABASE_URL
       waitForConnections: true,
       connectionLimit: 10,
       decimalNumbers: true,
+      multipleStatements: true,
       ...(process.env.DB_SSL === 'true' ? { ssl: { rejectUnauthorized: false } } : {})
     }
   : {
@@ -20,6 +21,7 @@ const dbConfig = process.env.DATABASE_URL
       waitForConnections: true,
       connectionLimit: 10,
       decimalNumbers: true,
+      multipleStatements: true,
       ...(process.env.DB_SSL === 'true' ? { ssl: { rejectUnauthorized: false } } : {})
     };
 
