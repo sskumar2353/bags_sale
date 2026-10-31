@@ -1,10 +1,9 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
--- 1. Remove all legacy categories and products
+-- 1. Clean legacy categories
 DELETE FROM categories WHERE id NOT IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
-UPDATE products SET is_active = 0 WHERE sku NOT LIKE 'BL-%';
 
--- 2. Upsert the 12 Categories
+-- 2. Upsert the 12 Official Bethany Categories
 INSERT INTO categories (id, parent_id, name, slug, description, image_url, sort_order, is_active)
 VALUES
 (1, NULL, 'Classic Jhola Shoulder Bag', 'classic-jhola-shoulder-bag', 'Handcrafted on traditional pit looms. Perfect for Daily Errands, college, and Office.', 'https://images.dailyobjects.com/marche/product-images/1204/space-blue-idyll-tote-images/Space-Blue-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1, 1),
@@ -27,7 +26,12 @@ ON DUPLICATE KEY UPDATE
     sort_order = VALUES(sort_order),
     is_active = 1;
 
--- 3. Insert the 60 Products (5 per category)
+-- 3. Truncate variants and images, then insert 60 clean products
+DELETE FROM product_variants;
+DELETE FROM product_images;
+DELETE FROM products;
+
+-- 4. Insert exactly 60 products (5 per category)
 INSERT INTO products (
     id, category_id, name, slug, description, short_description, sku, 
     price, mrp, discount_percentage, stock_quantity, badge, 
@@ -93,26 +97,9 @@ VALUES
 (57, 12, 'Magnetic Snap Universal Smartphone Bag', 'magnetic-snap-universal-smartphone-bag', 'Sized to accommodate all modern smartphones including Pro Max and Ultra models with thick protective cases attached.', 'Perfect for Hands-free walks and market errands.', 'BL-MOB-002', 749.00, 1099.00, 31.85, 45, 'HANDWOVEN', 1, 0, 4.86, 117, 1),
 (58, 12, 'Back-Card Slot Smartphone Sling', 'back-card-slot-smartphone-sling', 'Features two rear slip pockets for debit cards and driver license so you can leave bulky wallets at home for quick outings.', 'Perfect for Quick coffee runs and evening walks.', 'BL-MOB-003', 799.00, 1199.00, 33.36, 45, 'ESSENTIAL', 1, 0, 4.91, 132, 1),
 (59, 12, 'Dual-Pocket Phone & Earphones Pouch', 'dual-pocket-phone-earphones-pouch', 'Front dedicated slip for your AirPods or wired earphones plus central phone chamber with scratch-resistant microfiber lining.', 'Perfect for Commuters and music lovers.', 'BL-MOB-004', 749.00, 1049.00, 28.6, 45, '', 1, 0, 4.96, 147, 1),
-(60, 12, 'Padded Travel Mobile Holster Sling', 'padded-travel-mobile-holster-sling', 'Reinforced 4mm foam padding protects your phone screen from accidental table knocks and bag drops during active travel.', 'Perfect for Travel, sightseeing, and festivals.', 'BL-MOB-005', 849.00, 1249.00, 32.03, 45, '', 1, 0, 5.01, 162, 1)
-ON DUPLICATE KEY UPDATE
-    sku = VALUES(sku),
-    category_id = VALUES(category_id),
-    name = VALUES(name),
-    slug = VALUES(slug),
-    description = VALUES(description),
-    short_description = VALUES(short_description),
-    price = VALUES(price),
-    mrp = VALUES(mrp),
-    discount_percentage = VALUES(discount_percentage),
-    stock_quantity = VALUES(stock_quantity),
-    badge = VALUES(badge),
-    is_featured = VALUES(is_featured),
-    is_new_arrival = VALUES(is_new_arrival),
-    is_active = 1;
+(60, 12, 'Padded Travel Mobile Holster Sling', 'padded-travel-mobile-holster-sling', 'Reinforced 4mm foam padding protects your phone screen from accidental table knocks and bag drops during active travel.', 'Perfect for Travel, sightseeing, and festivals.', 'BL-MOB-005', 849.00, 1249.00, 32.03, 45, '', 1, 0, 5.01, 162, 1);
 
--- 4. Insert Images for all 60 products
-DELETE FROM product_images WHERE product_id IN (SELECT id FROM products WHERE sku LIKE 'BL-%');
-
+-- 5. Insert Images for all 60 products
 INSERT INTO product_images (product_id, image_url, alt_text, sort_order, is_primary)
 VALUES
 (1, 'https://images.dailyobjects.com/marche/product-images/1204/space-blue-idyll-tote-images/Space-Blue-Idyll-Tote.png?tr=cm-pad_resize,v-3', 'Classic Pitloom Jhola Bag Primary', 1, 1),
@@ -236,9 +223,7 @@ VALUES
 (60, 'https://images.dailyobjects.com/marche/product-images/1204/ivory-crimson-red-field-tote-bag-images/Ivory-Crimson-Red-Field-Tote-Bag-vw.png?tr=cm-pad_resize,v-3', 'Padded Travel Mobile Holster Sling Primary', 1, 1),
 (60, 'https://images.dailyobjects.com/marche/product-images/1204/olive-green-clove-field-tote-bag-images/Olive-Green-Clove-Field-Tote-Bag-vw.png?tr=cm-pad_resize,v-3', 'Padded Travel Mobile Holster Sling Angle', 2, 0);
 
--- 5. Insert Multi-Color Variants for all 60 products (2-3 colors each)
-DELETE FROM product_variants WHERE product_id IN (SELECT id FROM products WHERE sku LIKE 'BL-%');
-
+-- 6. Insert Multi-Color Variants for all 60 products (2-3 colors each)
 INSERT INTO product_variants (product_id, variant_name, color_name, color_code, size, sku, price, stock_quantity, image_url, is_active)
 VALUES
 (1, 'Classic Pitloom Jhola Bag - Indigo Navy', 'Indigo Navy', '#1e2d4a', 'Standard', 'BL-JHL-001-V1', 999.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/space-blue-idyll-tote-images/Space-Blue-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1),
@@ -255,6 +240,7 @@ VALUES
 (4, 'Raw Khadi Double-Weave Jhola - Navy Clove', 'Navy Clove', '#1e2d4a', 'Standard', 'BL-JHL-004-V3', 949.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/slate-gray-idyll-tote-images/Slate-Gray-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1),
 (5, 'Kasuti Temple Border Jhola - Crimson Festive', 'Crimson Festive', '#991b1b', 'Standard', 'BL-JHL-005-V1', 1199.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/cardinal-love-idyll-tote-bag-images/Cardinal-Love-Idyll-Tote-Bag.png?tr=cm-pad_resize,v-3', 1),
 (5, 'Kasuti Temple Border Jhola - Golden Ochre', 'Golden Ochre', '#d99b26', 'Standard', 'BL-JHL-005-V2', 1199.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 1),
+(5, 'Kasuti Temple Border Jhola - Ivory Pearl', 'Ivory Pearl', '#faf5ea', 'Standard', 'BL-JHL-005-V3', 1199.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/sand-basalt-pivot-key-tote-images/Sand-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (6, 'Cross-Body Canvas Sling Bag - Tan Sand', 'Tan Sand', '#c29b68', 'Standard', 'BL-SLG-001-V1', 1299.00, 20, 'https://images.dailyobjects.com/marche/product-images/1811/pivot-crossbody-sand-images/Pivot-Crossbody-Sand.png?tr=cm-pad_resize,v-3', 1),
 (6, 'Cross-Body Canvas Sling Bag - Basalt Charcoal', 'Basalt Charcoal', '#2b2b2b', 'Standard', 'BL-SLG-001-V2', 1299.00, 20, 'https://images.dailyobjects.com/marche/product-images/1811/pivot-crossbody-basalt-images/Pivot-Crossbody-Basalt-vw.png?tr=cm-pad_resize,v-3', 1),
 (6, 'Cross-Body Canvas Sling Bag - Terracotta Coral', 'Terracotta Coral', '#c86143', 'Standard', 'BL-SLG-001-V3', 1299.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/coral-basalt-pivot-key-tote-images/Coral-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
@@ -266,6 +252,7 @@ VALUES
 (8, 'Heritage Flap-Over Crossbody - Navy Clove', 'Navy Clove', '#1e2d4a', 'Standard', 'BL-SLG-003-V3', 1499.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/slate-gray-idyll-tote-images/Slate-Gray-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1),
 (9, 'Compact Day-Trip Crossbody - Crimson Festive', 'Crimson Festive', '#991b1b', 'Standard', 'BL-SLG-004-V1', 1199.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/cardinal-love-idyll-tote-bag-images/Cardinal-Love-Idyll-Tote-Bag.png?tr=cm-pad_resize,v-3', 1),
 (9, 'Compact Day-Trip Crossbody - Golden Ochre', 'Golden Ochre', '#d99b26', 'Standard', 'BL-SLG-004-V2', 1199.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 1),
+(9, 'Compact Day-Trip Crossbody - Ivory Pearl', 'Ivory Pearl', '#faf5ea', 'Standard', 'BL-SLG-004-V3', 1199.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/sand-basalt-pivot-key-tote-images/Sand-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (10, 'Dual-Zip Explorer Sling Bag - Midnight Navy', 'Midnight Navy', '#152238', 'Standard', 'BL-SLG-005-V1', 1349.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 1),
 (10, 'Dual-Zip Explorer Sling Bag - Slate Basalt', 'Slate Basalt', '#2d3748', 'Standard', 'BL-SLG-005-V2', 1349.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-backpacks.jpg?tr=cm-pad_crop,v-3', 1),
 (10, 'Dual-Zip Explorer Sling Bag - Olive Khaki', 'Olive Khaki', '#3f4f38', 'Standard', 'BL-SLG-005-V3', 1349.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/olive-green-clove-field-tote-bag-images/Olive-Green-Clove-Field-Tote-Bag-vw.png?tr=cm-pad_resize,v-3', 1),
@@ -277,6 +264,7 @@ VALUES
 (12, 'Artisan Pocketed Work Tote - Navy Clove', 'Navy Clove', '#1e2d4a', 'Standard', 'BL-TOT-002-V3', 1599.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/slate-gray-idyll-tote-images/Slate-Gray-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1),
 (13, 'Weekend Market Carry Tote - Crimson Festive', 'Crimson Festive', '#991b1b', 'Standard', 'BL-TOT-003-V1', 1399.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/cardinal-love-idyll-tote-bag-images/Cardinal-Love-Idyll-Tote-Bag.png?tr=cm-pad_resize,v-3', 1),
 (13, 'Weekend Market Carry Tote - Golden Ochre', 'Golden Ochre', '#d99b26', 'Standard', 'BL-TOT-003-V2', 1399.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 1),
+(13, 'Weekend Market Carry Tote - Ivory Pearl', 'Ivory Pearl', '#faf5ea', 'Standard', 'BL-TOT-003-V3', 1399.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/sand-basalt-pivot-key-tote-images/Sand-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (14, 'Minimalist Zippered Studio Tote - Midnight Navy', 'Midnight Navy', '#152238', 'Standard', 'BL-TOT-004-V1', 1699.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 1),
 (14, 'Minimalist Zippered Studio Tote - Slate Basalt', 'Slate Basalt', '#2d3748', 'Standard', 'BL-TOT-004-V2', 1699.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-backpacks.jpg?tr=cm-pad_crop,v-3', 1),
 (14, 'Minimalist Zippered Studio Tote - Olive Khaki', 'Olive Khaki', '#3f4f38', 'Standard', 'BL-TOT-004-V3', 1699.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/olive-green-clove-field-tote-bag-images/Olive-Green-Clove-Field-Tote-Bag-vw.png?tr=cm-pad_resize,v-3', 1),
@@ -288,6 +276,7 @@ VALUES
 (16, 'Eco-Friendly Jute-Cotton Market Bag - Navy Clove', 'Navy Clove', '#1e2d4a', 'Standard', 'BL-MKT-001-V3', 699.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/slate-gray-idyll-tote-images/Slate-Gray-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1),
 (17, 'Reinforced Box-Gusset Grocery Bag - Crimson Festive', 'Crimson Festive', '#991b1b', 'Standard', 'BL-MKT-002-V1', 749.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/cardinal-love-idyll-tote-bag-images/Cardinal-Love-Idyll-Tote-Bag.png?tr=cm-pad_resize,v-3', 1),
 (17, 'Reinforced Box-Gusset Grocery Bag - Golden Ochre', 'Golden Ochre', '#d99b26', 'Standard', 'BL-MKT-002-V2', 749.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 1),
+(17, 'Reinforced Box-Gusset Grocery Bag - Ivory Pearl', 'Ivory Pearl', '#faf5ea', 'Standard', 'BL-MKT-002-V3', 749.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/sand-basalt-pivot-key-tote-images/Sand-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (18, 'Foldable Compact Farmer Market Bag - Midnight Navy', 'Midnight Navy', '#152238', 'Standard', 'BL-MKT-003-V1', 599.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 1),
 (18, 'Foldable Compact Farmer Market Bag - Slate Basalt', 'Slate Basalt', '#2d3748', 'Standard', 'BL-MKT-003-V2', 599.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-backpacks.jpg?tr=cm-pad_crop,v-3', 1),
 (18, 'Foldable Compact Farmer Market Bag - Olive Khaki', 'Olive Khaki', '#3f4f38', 'Standard', 'BL-MKT-003-V3', 599.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/olive-green-clove-field-tote-bag-images/Olive-Green-Clove-Field-Tote-Bag-vw.png?tr=cm-pad_resize,v-3', 1),
@@ -299,6 +288,7 @@ VALUES
 (20, 'Artisan Heritage Bapatla Market Bag - Terracotta Coral', 'Terracotta Coral', '#c86143', 'Standard', 'BL-MKT-005-V3', 849.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/coral-basalt-pivot-key-tote-images/Coral-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (21, 'Festive Heritage Drawstring Potli - Crimson Festive', 'Crimson Festive', '#991b1b', 'Standard', 'BL-POT-001-V1', 899.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/cardinal-love-idyll-tote-bag-images/Cardinal-Love-Idyll-Tote-Bag.png?tr=cm-pad_resize,v-3', 1),
 (21, 'Festive Heritage Drawstring Potli - Golden Ochre', 'Golden Ochre', '#d99b26', 'Standard', 'BL-POT-001-V2', 899.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 1),
+(21, 'Festive Heritage Drawstring Potli - Ivory Pearl', 'Ivory Pearl', '#faf5ea', 'Standard', 'BL-POT-001-V3', 899.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/sand-basalt-pivot-key-tote-images/Sand-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (22, 'Zari Border Wedding Return Potli - Midnight Navy', 'Midnight Navy', '#152238', 'Standard', 'BL-POT-002-V1', 999.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 1),
 (22, 'Zari Border Wedding Return Potli - Slate Basalt', 'Slate Basalt', '#2d3748', 'Standard', 'BL-POT-002-V2', 999.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-backpacks.jpg?tr=cm-pad_crop,v-3', 1),
 (22, 'Zari Border Wedding Return Potli - Olive Khaki', 'Olive Khaki', '#3f4f38', 'Standard', 'BL-POT-002-V3', 999.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/olive-green-clove-field-tote-bag-images/Olive-Green-Clove-Field-Tote-Bag-vw.png?tr=cm-pad_resize,v-3', 1),
@@ -340,6 +330,7 @@ VALUES
 (34, 'Slim Everyday Essentials Zip Pocket - Navy Clove', 'Navy Clove', '#1e2d4a', 'Standard', 'BL-PCH-004-V3', 499.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/slate-gray-idyll-tote-images/Slate-Gray-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1),
 (35, 'Water-Resistant Toiletry Utility Pouch - Crimson Festive', 'Crimson Festive', '#991b1b', 'Standard', 'BL-PCH-005-V1', 749.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/cardinal-love-idyll-tote-bag-images/Cardinal-Love-Idyll-Tote-Bag.png?tr=cm-pad_resize,v-3', 1),
 (35, 'Water-Resistant Toiletry Utility Pouch - Golden Ochre', 'Golden Ochre', '#d99b26', 'Standard', 'BL-PCH-005-V2', 749.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 1),
+(35, 'Water-Resistant Toiletry Utility Pouch - Ivory Pearl', 'Ivory Pearl', '#faf5ea', 'Standard', 'BL-PCH-005-V3', 749.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/sand-basalt-pivot-key-tote-images/Sand-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (36, 'Structured Vanity Makeup Pouch - Tan Sand', 'Tan Sand', '#c29b68', 'Standard', 'BL-COS-001-V1', 799.00, 20, 'https://images.dailyobjects.com/marche/product-images/1811/pivot-crossbody-sand-images/Pivot-Crossbody-Sand.png?tr=cm-pad_resize,v-3', 1),
 (36, 'Structured Vanity Makeup Pouch - Basalt Charcoal', 'Basalt Charcoal', '#2b2b2b', 'Standard', 'BL-COS-001-V2', 799.00, 20, 'https://images.dailyobjects.com/marche/product-images/1811/pivot-crossbody-basalt-images/Pivot-Crossbody-Basalt-vw.png?tr=cm-pad_resize,v-3', 1),
 (36, 'Structured Vanity Makeup Pouch - Terracotta Coral', 'Terracotta Coral', '#c86143', 'Standard', 'BL-COS-001-V3', 799.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/coral-basalt-pivot-key-tote-images/Coral-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
@@ -351,6 +342,7 @@ VALUES
 (38, 'Travel Brush & Toiletries Case - Navy Clove', 'Navy Clove', '#1e2d4a', 'Standard', 'BL-COS-003-V3', 849.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/slate-gray-idyll-tote-images/Slate-Gray-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1),
 (39, 'Compact Handbag Vanity Pouch - Crimson Festive', 'Crimson Festive', '#991b1b', 'Standard', 'BL-COS-004-V1', 699.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/cardinal-love-idyll-tote-bag-images/Cardinal-Love-Idyll-Tote-Bag.png?tr=cm-pad_resize,v-3', 1),
 (39, 'Compact Handbag Vanity Pouch - Golden Ochre', 'Golden Ochre', '#d99b26', 'Standard', 'BL-COS-004-V2', 699.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 1),
+(39, 'Compact Handbag Vanity Pouch - Ivory Pearl', 'Ivory Pearl', '#faf5ea', 'Standard', 'BL-COS-004-V3', 699.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/sand-basalt-pivot-key-tote-images/Sand-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (40, 'Quilted Waterproof Lining Cosmetic Bag - Midnight Navy', 'Midnight Navy', '#152238', 'Standard', 'BL-COS-005-V1', 949.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 1),
 (40, 'Quilted Waterproof Lining Cosmetic Bag - Slate Basalt', 'Slate Basalt', '#2d3748', 'Standard', 'BL-COS-005-V2', 949.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-backpacks.jpg?tr=cm-pad_crop,v-3', 1),
 (40, 'Quilted Waterproof Lining Cosmetic Bag - Olive Khaki', 'Olive Khaki', '#3f4f38', 'Standard', 'BL-COS-005-V3', 949.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/olive-green-clove-field-tote-bag-images/Olive-Green-Clove-Field-Tote-Bag-vw.png?tr=cm-pad_resize,v-3', 1),
@@ -362,6 +354,7 @@ VALUES
 (42, 'Dual-Card & Change Wallet Pouch - Navy Clove', 'Navy Clove', '#1e2d4a', 'Standard', 'BL-WL-002-V3', 549.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/slate-gray-idyll-tote-images/Slate-Gray-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1),
 (43, 'Keychain Loop Pocket Coin Purse - Crimson Festive', 'Crimson Festive', '#991b1b', 'Standard', 'BL-WL-003-V1', 449.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/cardinal-love-idyll-tote-bag-images/Cardinal-Love-Idyll-Tote-Bag.png?tr=cm-pad_resize,v-3', 1),
 (43, 'Keychain Loop Pocket Coin Purse - Golden Ochre', 'Golden Ochre', '#d99b26', 'Standard', 'BL-WL-003-V2', 449.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 1),
+(43, 'Keychain Loop Pocket Coin Purse - Ivory Pearl', 'Ivory Pearl', '#faf5ea', 'Standard', 'BL-WL-003-V3', 449.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/sand-basalt-pivot-key-tote-images/Sand-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (44, 'Folded Cash & Coin Minimalist Wallet - Midnight Navy', 'Midnight Navy', '#152238', 'Standard', 'BL-WL-004-V1', 599.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 1),
 (44, 'Folded Cash & Coin Minimalist Wallet - Slate Basalt', 'Slate Basalt', '#2d3748', 'Standard', 'BL-WL-004-V2', 599.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-backpacks.jpg?tr=cm-pad_crop,v-3', 1),
 (44, 'Folded Cash & Coin Minimalist Wallet - Olive Khaki', 'Olive Khaki', '#3f4f38', 'Standard', 'BL-WL-004-V3', 599.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/olive-green-clove-field-tote-bag-images/Olive-Green-Clove-Field-Tote-Bag-vw.png?tr=cm-pad_resize,v-3', 1),
@@ -373,6 +366,7 @@ VALUES
 (46, 'Box-Bottom Insulated Tiffin Bag - Navy Clove', 'Navy Clove', '#1e2d4a', 'Standard', 'BL-LNC-001-V3', 899.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/slate-gray-idyll-tote-images/Slate-Gray-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1),
 (47, 'Steel Dabba Thermal Carry Bag - Crimson Festive', 'Crimson Festive', '#991b1b', 'Standard', 'BL-LNC-002-V1', 949.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/cardinal-love-idyll-tote-bag-images/Cardinal-Love-Idyll-Tote-Bag.png?tr=cm-pad_resize,v-3', 1),
 (47, 'Steel Dabba Thermal Carry Bag - Golden Ochre', 'Golden Ochre', '#d99b26', 'Standard', 'BL-LNC-002-V2', 949.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 1),
+(47, 'Steel Dabba Thermal Carry Bag - Ivory Pearl', 'Ivory Pearl', '#faf5ea', 'Standard', 'BL-LNC-002-V3', 949.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/sand-basalt-pivot-key-tote-images/Sand-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (48, 'Bottle Holder Office Lunch Tote - Midnight Navy', 'Midnight Navy', '#152238', 'Standard', 'BL-LNC-003-V1', 999.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 1),
 (48, 'Bottle Holder Office Lunch Tote - Slate Basalt', 'Slate Basalt', '#2d3748', 'Standard', 'BL-LNC-003-V2', 999.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-backpacks.jpg?tr=cm-pad_crop,v-3', 1),
 (48, 'Bottle Holder Office Lunch Tote - Olive Khaki', 'Olive Khaki', '#3f4f38', 'Standard', 'BL-LNC-003-V3', 999.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/olive-green-clove-field-tote-bag-images/Olive-Green-Clove-Field-Tote-Bag-vw.png?tr=cm-pad_resize,v-3', 1),
@@ -384,6 +378,7 @@ VALUES
 (50, 'Wipe-Clean Spill-Resistant Lunch Bag - Terracotta Coral', 'Terracotta Coral', '#c86143', 'Standard', 'BL-LNC-005-V3', 899.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/coral-basalt-pivot-key-tote-images/Coral-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (51, 'Slim Dual-Passport Travel Organizer - Crimson Festive', 'Crimson Festive', '#991b1b', 'Standard', 'BL-PSP-001-V1', 999.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/cardinal-love-idyll-tote-bag-images/Cardinal-Love-Idyll-Tote-Bag.png?tr=cm-pad_resize,v-3', 1),
 (51, 'Slim Dual-Passport Travel Organizer - Golden Ochre', 'Golden Ochre', '#d99b26', 'Standard', 'BL-PSP-001-V2', 999.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 1),
+(51, 'Slim Dual-Passport Travel Organizer - Ivory Pearl', 'Ivory Pearl', '#faf5ea', 'Standard', 'BL-PSP-001-V3', 999.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/sand-basalt-pivot-key-tote-images/Sand-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3', 1),
 (52, 'Boarding Pass & Forex Wallet Case - Midnight Navy', 'Midnight Navy', '#152238', 'Standard', 'BL-PSP-002-V1', 1099.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 1),
 (52, 'Boarding Pass & Forex Wallet Case - Slate Basalt', 'Slate Basalt', '#2d3748', 'Standard', 'BL-PSP-002-V2', 1099.00, 20, 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-backpacks.jpg?tr=cm-pad_crop,v-3', 1),
 (52, 'Boarding Pass & Forex Wallet Case - Olive Khaki', 'Olive Khaki', '#3f4f38', 'Standard', 'BL-PSP-002-V3', 1099.00, 20, 'https://images.dailyobjects.com/marche/product-images/1204/olive-green-clove-field-tote-bag-images/Olive-Green-Clove-Field-Tote-Bag-vw.png?tr=cm-pad_resize,v-3', 1),

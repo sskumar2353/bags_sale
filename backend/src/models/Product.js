@@ -50,33 +50,65 @@ export const Product = {
         p.*,
         c.name AS category,
         c.slug AS category_slug,
-        (
-          SELECT image_url 
-          FROM product_images 
-          WHERE product_id = p.id 
-          ORDER BY is_primary DESC, sort_order ASC 
-          LIMIT 1
+        COALESCE(
+          (
+            SELECT image_url 
+            FROM product_images 
+            WHERE product_id = p.id 
+            ORDER BY is_primary DESC, sort_order ASC 
+            LIMIT 1
+          ),
+          (
+            SELECT image_url 
+            FROM product_variants 
+            WHERE product_id = p.id AND image_url IS NOT NULL 
+            LIMIT 1
+          )
         ) AS image,
-        (
-          SELECT image_url 
-          FROM product_images 
-          WHERE product_id = p.id 
-          ORDER BY is_primary DESC, sort_order ASC 
-          LIMIT 1
+        COALESCE(
+          (
+            SELECT image_url 
+            FROM product_images 
+            WHERE product_id = p.id 
+            ORDER BY is_primary DESC, sort_order ASC 
+            LIMIT 1
+          ),
+          (
+            SELECT image_url 
+            FROM product_variants 
+            WHERE product_id = p.id AND image_url IS NOT NULL 
+            LIMIT 1
+          )
         ) AS primary_image,
-        (
-          SELECT image_url 
-          FROM product_images 
-          WHERE product_id = p.id 
-          ORDER BY is_primary DESC, sort_order ASC 
-          LIMIT 1
+        COALESCE(
+          (
+            SELECT image_url 
+            FROM product_images 
+            WHERE product_id = p.id 
+            ORDER BY is_primary DESC, sort_order ASC 
+            LIMIT 1
+          ),
+          (
+            SELECT image_url 
+            FROM product_variants 
+            WHERE product_id = p.id AND image_url IS NOT NULL 
+            LIMIT 1
+          )
         ) AS image_url,
-        (
-          SELECT image_url 
-          FROM product_images 
-          WHERE product_id = p.id AND is_primary = 0
-          ORDER BY sort_order ASC 
-          LIMIT 1
+        COALESCE(
+          (
+            SELECT image_url 
+            FROM product_images 
+            WHERE product_id = p.id AND is_primary = 0
+            ORDER BY sort_order ASC 
+            LIMIT 1
+          ),
+          (
+            SELECT image_url 
+            FROM product_variants 
+            WHERE product_id = p.id AND image_url IS NOT NULL 
+            LIMIT 1
+          )
         ) AS alt_image,
         (
           SELECT JSON_ARRAYAGG(
@@ -103,10 +135,22 @@ export const Product = {
     const [rows] = await pool.query(query, args);
 
     // Normalize JSON variants if parsed as string or null
-    return rows.map((row) => ({
-      ...row,
-      variants: Array.isArray(row.variants) ? row.variants : []
-    }));
+    return rows.map((row) => {
+      let parsedVariants = [];
+      if (Array.isArray(row.variants)) {
+        parsedVariants = row.variants;
+      } else if (typeof row.variants === 'string') {
+        try {
+          parsedVariants = JSON.parse(row.variants);
+        } catch {
+          parsedVariants = [];
+        }
+      }
+      return {
+        ...row,
+        variants: Array.isArray(parsedVariants) ? parsedVariants.filter((v) => v && v.id) : []
+      };
+    });
   },
 
   async findBySlug(slug) {
@@ -134,9 +178,9 @@ export const Product = {
 
     return {
       ...product,
-      image: images[0]?.image_url || null,
-      primary_image: images[0]?.image_url || null,
-      image_url: images[0]?.image_url || null,
+      image: images[0]?.image_url || variants[0]?.image_url || null,
+      primary_image: images[0]?.image_url || variants[0]?.image_url || null,
+      image_url: images[0]?.image_url || variants[0]?.image_url || null,
       images,
       variants
     };
