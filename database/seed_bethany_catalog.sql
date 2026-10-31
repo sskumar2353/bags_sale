@@ -7,22 +7,19 @@
 UPDATE products SET is_active = 0 WHERE sku NOT LIKE 'BL-%';
 UPDATE categories SET is_active = 0;
 
--- 2. Ensure Official Bethany Categories Exist and are Active
-INSERT INTO categories (id, parent_id, name, slug, description, image_url, sort_order, is_active)
-VALUES
-    (1, NULL, 'Tote Bags', 'tote-bags', 'Handwoven shoulder bags, totes, and everyday market carry.', 'https://images.dailyobjects.com/marche/product-images/1204/space-blue-idyll-tote-images/Space-Blue-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1, 1),
-    (2, NULL, 'Crossbody Bags', 'crossbody-bags', 'Hands-free sling bags and crossbody carry for outings and travel.', 'https://images.dailyobjects.com/marche/product-images/1811/pivot-crossbody-sand-images/Pivot-Crossbody-Sand.png?tr=cm-pad_resize,v-3', 2, 1),
-    (3, NULL, 'Messenger / Laptop Bags', 'messenger-laptop-bags', 'Padded protective laptop sleeves and work organizers.', 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 3, 1),
-    (4, NULL, 'Phone Bags', 'phone-bags', 'Compact mobile pouches for phone, keys, and earphones on the go.', 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-phone-bag.jpg?tr=cm-pad_crop,v-3', 4, 1),
-    (5, NULL, 'Wallets', 'wallets', 'Coin purses, card wallets, and travel passport organizers.', 'https://images.dailyobjects.com/marche/assets/images/other/new-wallets.jpg?tr=cm-pad_crop,v-3', 5, 1),
-    (6, NULL, 'Pouches', 'pouches', 'Utility pouches, cosmetic vanity organizers, and wedding potlis.', 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 6, 1),
-    (7, NULL, 'Gifting', 'gifting', 'Artisan gift sets and celebration bundles with meaningful social impact.', 'https://images.dailyobjects.com/marche/corporate-page/gifting-update.png?tr=cm-pad_resize,v-3', 7, 1)
-ON DUPLICATE KEY UPDATE 
-    name = VALUES(name), 
-    description = VALUES(description), 
-    image_url = VALUES(image_url), 
-    sort_order = VALUES(sort_order),
-    is_active = VALUES(is_active);
+-- 2. Restore and Activate Official Bethany Categories with clean Slugs & IDs
+UPDATE categories SET name = 'Tote Bags', slug = 'tote-bags', description = 'Handwoven shoulder bags, totes, and everyday market carry.', sort_order = 1, is_active = 1 WHERE id = 1;
+UPDATE categories SET name = 'Crossbody Bags', slug = 'crossbody-bags', description = 'Hands-free sling bags and crossbody carry for outings and travel.', sort_order = 2, is_active = 1 WHERE id = 2;
+UPDATE categories SET name = 'Messenger / Laptop Bags', slug = 'messenger-laptop-bags', description = 'Padded protective laptop sleeves and work organizers.', sort_order = 3, is_active = 1 WHERE id = 4;
+UPDATE categories SET name = 'Phone Bags', slug = 'phone-bags', description = 'Compact mobile pouches for phone, keys, and earphones on the go.', sort_order = 4, is_active = 1 WHERE id = 5;
+UPDATE categories SET name = 'Wallets', slug = 'wallets', description = 'Coin purses, card wallets, and travel passport organizers.', sort_order = 5, is_active = 1 WHERE id = 6;
+UPDATE categories SET name = 'Pouches', slug = 'pouches', description = 'Utility pouches, cosmetic vanity organizers, and wedding potlis.', sort_order = 6, is_active = 1 WHERE id = 8;
+UPDATE categories SET name = 'Gifting', slug = 'gifting', description = 'Artisan gift sets and celebration bundles with meaningful social impact.', sort_order = 7, is_active = 1 WHERE id = 22;
+
+-- Deactivate unused legacy categories like backpacks, duffle bags, tech, etc.
+UPDATE categories SET is_active = 0 WHERE id IN (3, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21);
+UPDATE categories SET name = 'Backpacks', slug = 'backpacks' WHERE id = 3;
+UPDATE categories SET name = 'Duffle Bags', slug = 'duffle-bags' WHERE id = 7;
 
 -- 3. Insert / Update the 12 Official Bethany Looms Products
 INSERT INTO products (

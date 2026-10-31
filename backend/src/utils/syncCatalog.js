@@ -7,22 +7,19 @@ export const BETHANY_SEED_SQL = `
 UPDATE products SET is_active = 0 WHERE sku NOT LIKE 'BL-%';
 UPDATE categories SET is_active = 0;
 
--- 2. Upsert Bethany Categories
-INSERT INTO categories (id, parent_id, name, slug, description, image_url, sort_order, is_active)
-VALUES
-    (1, NULL, 'Tote Bags', 'tote-bags', 'Handwoven shoulder bags, totes, and everyday market carry.', 'https://images.dailyobjects.com/marche/product-images/1204/space-blue-idyll-tote-images/Space-Blue-Idyll-Tote.png?tr=cm-pad_resize,v-3', 1, 1),
-    (2, NULL, 'Crossbody Bags', 'crossbody-bags', 'Hands-free sling bags and crossbody carry for outings and travel.', 'https://images.dailyobjects.com/marche/product-images/1811/pivot-crossbody-sand-images/Pivot-Crossbody-Sand.png?tr=cm-pad_resize,v-3', 2, 1),
-    (3, NULL, 'Messenger / Laptop Bags', 'messenger-laptop-bags', 'Padded protective laptop sleeves and work organizers.', 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3', 3, 1),
-    (4, NULL, 'Phone Bags', 'phone-bags', 'Compact mobile pouches for phone, keys, and earphones on the go.', 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-phone-bag.jpg?tr=cm-pad_crop,v-3', 4, 1),
-    (5, NULL, 'Wallets', 'wallets', 'Coin purses, card wallets, and travel passport organizers.', 'https://images.dailyobjects.com/marche/assets/images/other/new-wallets.jpg?tr=cm-pad_crop,v-3', 5, 1),
-    (6, NULL, 'Pouches', 'pouches', 'Utility pouches, cosmetic vanity organizers, and wedding potlis.', 'https://images.dailyobjects.com/marche/assets/images/other/new-pouches.jpg?tr=cm-pad_crop,v-3', 6, 1),
-    (7, NULL, 'Gifting', 'gifting', 'Artisan gift sets and celebration bundles with meaningful social impact.', 'https://images.dailyobjects.com/marche/corporate-page/gifting-update.png?tr=cm-pad_resize,v-3', 7, 1)
-ON DUPLICATE KEY UPDATE 
-    name = VALUES(name), 
-    description = VALUES(description), 
-    image_url = VALUES(image_url), 
-    sort_order = VALUES(sort_order),
-    is_active = VALUES(is_active);
+-- 2. Restore and Activate Official Bethany Categories with clean Slugs & IDs
+UPDATE categories SET name = 'Tote Bags', slug = 'tote-bags', description = 'Handwoven shoulder bags, totes, and everyday market carry.', sort_order = 1, is_active = 1 WHERE id = 1;
+UPDATE categories SET name = 'Crossbody Bags', slug = 'crossbody-bags', description = 'Hands-free sling bags and crossbody carry for outings and travel.', sort_order = 2, is_active = 1 WHERE id = 2;
+UPDATE categories SET name = 'Messenger / Laptop Bags', slug = 'messenger-laptop-bags', description = 'Padded protective laptop sleeves and work organizers.', sort_order = 3, is_active = 1 WHERE id = 4;
+UPDATE categories SET name = 'Phone Bags', slug = 'phone-bags', description = 'Compact mobile pouches for phone, keys, and earphones on the go.', sort_order = 4, is_active = 1 WHERE id = 5;
+UPDATE categories SET name = 'Wallets', slug = 'wallets', description = 'Coin purses, card wallets, and travel passport organizers.', sort_order = 5, is_active = 1 WHERE id = 6;
+UPDATE categories SET name = 'Pouches', slug = 'pouches', description = 'Utility pouches, cosmetic vanity organizers, and wedding potlis.', sort_order = 6, is_active = 1 WHERE id = 8;
+UPDATE categories SET name = 'Gifting', slug = 'gifting', description = 'Artisan gift sets and celebration bundles with meaningful social impact.', sort_order = 7, is_active = 1 WHERE id = 22;
+
+-- Deactivate unused legacy categories like backpacks, duffle bags, tech, etc.
+UPDATE categories SET is_active = 0 WHERE id IN (3, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21);
+UPDATE categories SET name = 'Backpacks', slug = 'backpacks' WHERE id = 3;
+UPDATE categories SET name = 'Duffle Bags', slug = 'duffle-bags' WHERE id = 7;
 
 -- 3. Insert / Update the 12 Official Bethany Looms Products
 INSERT INTO products (
@@ -33,7 +30,7 @@ INSERT INTO products (
 VALUES
     -- 1. Classic Jhola Shoulder Bag
     (
-        (SELECT id FROM categories WHERE slug = 'tote-bags' LIMIT 1),
+        1,
         'Classic Jhola Shoulder Bag',
         'classic-jhola-shoulder-bag',
         'Handcrafted on traditional pit looms by Bethany artisans in Bapatla. Crafted from 100% pure yarn-dyed handloom cotton, this Classic Jhola features an ergonomic wide shoulder strap for effortless carry, a deep central chamber, reinforced stress points, and a natural breathable weave. Every purchase directly sustains dignified livelihoods and medical care.',
@@ -44,7 +41,7 @@ VALUES
 
     -- 2. Cross-Body Sling Bag
     (
-        (SELECT id FROM categories WHERE slug = 'crossbody-bags' LIMIT 1),
+        2,
         'Cross-Body Sling Bag',
         'cross-body-sling-bag',
         'Compact, versatile crossbody bag tailored with durable handwoven cotton twill. Features an adjustable shoulder strap, antique brass hardware, easy-glide dual zip compartments, and an internal secure slip for keys and currency.',
@@ -55,7 +52,7 @@ VALUES
 
     -- 3. Everyday Tote Bag
     (
-        (SELECT id FROM categories WHERE slug = 'tote-bags' LIMIT 1),
+        1,
         'Everyday Tote Bag',
         'everyday-tote-bag',
         'Our signature everyday carry tote handwoven with heavyweight cotton canvas. Engineered with reinforced dual handles, a dedicated padded sleeve that fits laptops up to 14 inches, and interior slip pockets for books, tumblers, and shopping finds.',
@@ -66,7 +63,7 @@ VALUES
 
     -- 4. Market/Shopping Bag
     (
-        (SELECT id FROM categories WHERE slug = 'tote-bags' LIMIT 1),
+        1,
         'Market/Shopping Bag',
         'market-shopping-bag',
         'Eco-friendly, reusable shopping bag handwoven from unbleached natural cotton and blended golden jute fibers. Built with an expanded box gusset base that holds up to 15 kg of groceries without stretching.',
@@ -77,7 +74,7 @@ VALUES
 
     -- 5. Potli Bag
     (
-        (SELECT id FROM categories WHERE slug = 'pouches' LIMIT 1),
+        8,
         'Potli Bag',
         'potli-bag',
         'Artisanal festive potli bag adorned with hand-twisted drawstring cords and decorative brass bells. Woven with heritage motifs by elderly artisans, perfect for festive celebrations, wedding returns, and celebratory gifting.',
@@ -88,7 +85,7 @@ VALUES
 
     -- 6. Laptop Sleeve
     (
-        (SELECT id FROM categories WHERE slug = 'messenger-laptop-bags' LIMIT 1),
+        4,
         'Laptop Sleeve',
         'laptop-sleeve',
         'Precision-crafted protective laptop sleeve with 8mm shock-absorbing recycled foam padding and an ultra-soft scratch-free inner lining. Finished with a heavy-duty brass zipper and water-resistant woven exterior.',
@@ -99,7 +96,7 @@ VALUES
 
     -- 7. Zip Pouch / Utility Pouch
     (
-        (SELECT id FROM categories WHERE slug = 'pouches' LIMIT 1),
+        8,
         'Zip Pouch / Utility Pouch',
         'zip-pouch-utility-pouch',
         'Compact multipurpose zip organizer pouch tailored for charging cables, power banks, stationery, and daily pocket items. Sized to fit comfortably inside any backpack or tote.',
@@ -110,7 +107,7 @@ VALUES
 
     -- 8. Cosmetic / Makeup Pouch
     (
-        (SELECT id FROM categories WHERE slug = 'pouches' LIMIT 1),
+        8,
         'Cosmetic / Makeup Pouch',
         'cosmetic-makeup-pouch',
         'Structured vanity cosmetic pouch with a wipe-clean spill-resistant inner lining. Features a wide zip opening that stays open on bathroom counters for effortless morning routines and travel toiletry organizing.',
@@ -121,7 +118,7 @@ VALUES
 
     -- 9. Coin Purse & Wallet Pouch
     (
-        (SELECT id FROM categories WHERE slug = 'wallets' LIMIT 1),
+        6,
         'Coin Purse & Wallet Pouch',
         'coin-purse-wallet-pouch',
         'Palm-sized handcrafted wallet pouch with a secure brass zip closure. Designed to carry debit cards, folded cash, transit cards, coins, and loose keys comfortably without pocket bulk.',
@@ -132,7 +129,7 @@ VALUES
 
     -- 10. Tiffin / Lunch Bag
     (
-        (SELECT id FROM categories WHERE slug = 'tote-bags' LIMIT 1),
+        1,
         'Tiffin / Lunch Bag',
         'tiffin-lunch-bag',
         'Box-bottom thermal-insulated lunch bag engineered to carry steel tiffin boxes, water bottles, and fruit containers upright without tipping. Water-resistant wipeable inner lining prevents leak stains.',
@@ -143,7 +140,7 @@ VALUES
 
     -- 11. Passport & Travel Pouch
     (
-        (SELECT id FROM categories WHERE slug = 'wallets' LIMIT 1),
+        6,
         'Passport & Travel Pouch',
         'passport-travel-pouch',
         'Slim, secure travel organizer tailored with dual passport sleeves, international boarding pass compartment, pen holder, and a zipped pocket for currency notes and forex cards.',
@@ -154,7 +151,7 @@ VALUES
 
     -- 12. Mobile Pouch
     (
-        (SELECT id FROM categories WHERE slug = 'phone-bags' LIMIT 1),
+        5,
         'Mobile Pouch',
         'mobile-pouch',
         'Minimalist crossbody phone pouch with a gentle magnetic snap enclosure and an easy-access card slot on the back. Sized to fit all modern smartphones with protective cases.',
@@ -163,6 +160,7 @@ VALUES
         699.00, 999.00, 30.03, 50, 'QUICK ACCESS', 1, 1, 4.80, 45, 1
     )
 ON DUPLICATE KEY UPDATE
+    category_id = VALUES(category_id),
     name = VALUES(name),
     description = VALUES(description),
     short_description = VALUES(short_description),
@@ -174,6 +172,14 @@ ON DUPLICATE KEY UPDATE
     is_featured = VALUES(is_featured),
     is_new_arrival = VALUES(is_new_arrival),
     is_active = 1;
+
+-- Also explicitly sync category_ids for all 12 products
+UPDATE products SET category_id = 1 WHERE sku IN ('BL-JHL-001', 'BL-TOT-003', 'BL-MKT-004', 'BL-LNC-010');
+UPDATE products SET category_id = 2 WHERE sku IN ('BL-SLG-002');
+UPDATE products SET category_id = 4 WHERE sku IN ('BL-SLV-006');
+UPDATE products SET category_id = 5 WHERE sku IN ('BL-MOB-012');
+UPDATE products SET category_id = 6 WHERE sku IN ('BL-WL-009', 'BL-PSP-011');
+UPDATE products SET category_id = 8 WHERE sku IN ('BL-POT-005', 'BL-PCH-007', 'BL-COS-008');
 
 -- 4. Clean previous images and variants for these 12 products
 DELETE FROM product_images WHERE product_id IN (SELECT id FROM products WHERE sku LIKE 'BL-%');
