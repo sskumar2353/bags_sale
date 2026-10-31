@@ -13,7 +13,6 @@ export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category') || '';
   const sortParam = searchParams.get('sort') || 'recommended';
-  const inStockParam = searchParams.get('inStock') === 'true';
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -27,17 +26,22 @@ export default function Shop() {
       try {
         setLoading(true);
         setError(null);
+        // Only load available stock across the website
         const [cats, prods] = await Promise.all([
           productService.getCategories(),
           productService.getProducts({
             category: categoryParam,
             sort: sortParam,
-            inStock: inStockParam ? 'true' : undefined
+            inStock: 'true'
           })
         ]);
         if (active) {
-          setCategories(cats);
-          setProducts(prods);
+          setCategories(cats || []);
+          // Ensure strictly in-stock products only
+          const availableProducts = (prods || []).filter(
+            (p) => p.stock_quantity === undefined || p.stock_quantity > 0
+          );
+          setProducts(availableProducts);
           setCurrentPage(1);
         }
       } catch (err) {
@@ -51,7 +55,7 @@ export default function Shop() {
     return () => {
       active = false;
     };
-  }, [categoryParam, sortParam, inStockParam]);
+  }, [categoryParam, sortParam]);
 
   const handleCategoryChange = (val) => {
     const next = new URLSearchParams(searchParams);
@@ -69,15 +73,7 @@ export default function Shop() {
     setCurrentPage(1);
   };
 
-  const handleToggleInStock = (val) => {
-    const next = new URLSearchParams(searchParams);
-    if (val) next.set('inStock', 'true');
-    else next.delete('inStock');
-    setSearchParams(next);
-    setCurrentPage(1);
-  };
-
-  // 12 products per page pagination
+  // 12 products per page pagination (no total count exposed)
   const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE) || 1;
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
@@ -91,16 +87,15 @@ export default function Shop() {
 
   return (
     <main className="page listing-page">
-      {/* Category Story Bar removed (Entrance only on Homepage) */}
-      {/* Breadcrumb removed */}
-
       <div className="category-header-banner" style={{ borderBottom: 'none', paddingBottom: '0' }}>
-        <h1 className="category-header-title">BAGS & WALLETS</h1>
-        <p style={{ color: 'var(--ink-muted)', fontSize: '13px', marginTop: '-12px' }}>
-          Thoughtful carry, designed around the way you move.
+        <span className="bethany-eyebrow" style={{ marginBottom: '8px' }}>BETHANY LOOMS · HANDWOVEN COLLECTION</span>
+        <h1 className="category-header-title">All Handwoven Pieces</h1>
+        <p style={{ color: 'var(--muted)', fontSize: '14.5px', marginTop: '-8px' }}>
+          Thoughtful bags and everyday carry, handwoven by people our mission cares for.
         </p>
       </div>
 
+      {/* Premium Filter & Sort Bar */}
       <div
         className="listing-tools"
         style={{
@@ -109,21 +104,19 @@ export default function Shop() {
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '14px',
-          margin: '20px 0 28px'
+          margin: '24px 0 32px'
         }}
       >
         <ProductFilters
           categories={categories}
           selectedCategory={categoryParam}
           onSelectCategory={handleCategoryChange}
-          inStockOnly={inStockParam}
-          onToggleInStock={handleToggleInStock}
         />
         <ProductSort value={sortParam} onChange={handleSortChange} />
       </div>
 
       {loading ? (
-        <Loading message="Fetching catalog…" />
+        <Loading message="Fetching collection…" />
       ) : error ? (
         <div className="empty">
           <h3>Failed to load products</h3>
@@ -131,7 +124,7 @@ export default function Shop() {
         </div>
       ) : (
         <>
-          <ProductGrid products={paginatedProducts} emptyMessage="No products match the selected criteria." />
+          <ProductGrid products={paginatedProducts} emptyMessage="No pieces match the selected filter." />
           <Pagination
             current={currentPage}
             totalPages={totalPages}

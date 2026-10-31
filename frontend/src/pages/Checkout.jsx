@@ -124,7 +124,7 @@ export default function Checkout() {
             email: address.email
           },
           theme: {
-            color: '#20211e'
+            color: '#1e2d4a'
           },
           handler: async (response) => {
             try {

@@ -1,34 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Search, UserRound, ShoppingBag, Shield, Heart } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 import useCart from '../../hooks/useCart';
+import useWishlist from '../../hooks/useWishlist';
 import SearchBar from './SearchBar';
-import { NAV_LINKS, NAV_LINKS_TE } from '../../utils/constants';
+import { NAV_LINKS } from '../../utils/constants';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [donateOpen, setDonateOpen] = useState(false);
   const [donationAmount, setDonationAmount] = useState(1000);
-  const [lang, setLang] = useState(() => localStorage.getItem('site_lang') || 'en');
   const { user, isAdmin } = useAuth();
   const { itemCount } = useCart();
+  const { items: wishlistItems } = useWishlist();
+  const wishlistCount = wishlistItems ? wishlistItems.length : 0;
   const location = useLocation();
-
-  useEffect(() => {
-    const saved = localStorage.getItem('site_lang') || 'en';
-    document.documentElement.lang = saved;
-  }, []);
-
-  const toggleLanguage = () => {
-    const nextLang = lang === 'en' ? 'te' : 'en';
-    setLang(nextLang);
-    localStorage.setItem('site_lang', nextLang);
-    document.documentElement.lang = nextLang;
-  };
-
-  const navItems = lang === 'te' ? NAV_LINKS_TE : NAV_LINKS;
 
   const handleNavLinkClick = (to) => {
     setMenuOpen(false);
@@ -52,7 +40,7 @@ export default function Navbar() {
           {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
 
-        {/* Brand Logo: Bethany Looms (A project of Bethany Leprosy Mission Association) */}
+        {/* Brand Logo: Bethany Looms */}
         <Link to="/" className="brand-logo" onClick={() => setMenuOpen(false)} aria-label="Bethany Looms Home">
           <div className="brand-text-bethany">
             <span className="brand-name">Bethany Looms</span>
@@ -62,7 +50,7 @@ export default function Navbar() {
 
         {/* Center Nav Links */}
         <nav className={menuOpen ? 'nav open' : 'nav'}>
-          {navItems.map((link) => (
+          {NAV_LINKS.map((link) => (
             <Link
               key={link.label}
               to={link.to}
@@ -88,14 +76,6 @@ export default function Navbar() {
           {/* Mobile Drawer Actions */}
           <div className="mobile-drawer-footer">
             <button
-              className="mobile-lang-btn"
-              onClick={toggleLanguage}
-              type="button"
-              aria-label="Switch language"
-            >
-              <span>{lang === 'en' ? 'భాష: తెలుగులోకి మార్చండి' : 'Language: Switch to English'}</span>
-            </button>
-            <button
               className="button button-outline"
               style={{ width: '100%', marginBottom: '10px' }}
               onClick={() => {
@@ -103,16 +83,18 @@ export default function Navbar() {
                 setDonateOpen(true);
               }}
             >
-              Donate
+              Donate to Mission
             </button>
-            <Link to="/wishlist" onClick={() => setMenuOpen(false)}>Wishlist</Link>
+            <Link to="/wishlist" onClick={() => setMenuOpen(false)}>
+              Wishlist {wishlistCount > 0 ? `(${wishlistCount})` : ''}
+            </Link>
             <Link to={user ? '/profile' : '/login'} onClick={() => setMenuOpen(false)}>
               {user ? 'My Account' : 'Sign In'}
             </Link>
           </div>
         </nav>
 
-        {/* Right Action Items: Donate, Cart, Search, Profile, Language */}
+        {/* Right Action Icons aligned in a luxury manner */}
         <div className="header-actions">
           {/* Donate Pill Button */}
           <button
@@ -125,36 +107,42 @@ export default function Navbar() {
             <span>Donate</span>
           </button>
 
-          {/* Cart Pill Button matching PDF */}
-          <Link className="cart-pill-btn" to="/cart" aria-label="Shopping Cart">
-            <span>Cart ({itemCount})</span>
-          </Link>
-
-          {/* Language Switcher */}
-          <button
-            className="lang-pill-btn"
-            onClick={toggleLanguage}
-            type="button"
-            aria-label="Switch language between English and Telugu"
-            title="English · తెలుగు"
-          >
-            {lang === 'en' ? 'తెలుగు' : 'EN'}
-          </button>
-
+          {/* Search Icon */}
           <button
             className="icon-btn"
             onClick={() => setSearchOpen(!searchOpen)}
             aria-label="Search products"
           >
-            <Search size={20} strokeWidth={1.8} />
+            <Search size={21} strokeWidth={1.8} />
           </button>
 
+          {/* Wishlist Icon with count badge */}
+          <Link
+            className="icon-btn wishlist-icon-btn"
+            to="/wishlist"
+            aria-label="Wishlist"
+          >
+            <Heart size={21} strokeWidth={1.8} />
+            {wishlistCount > 0 && <span className="nav-badge-count">{wishlistCount}</span>}
+          </Link>
+
+          {/* Cart Icon with count badge */}
+          <Link
+            className="icon-btn cart-icon-btn"
+            to="/cart"
+            aria-label="Shopping Cart"
+          >
+            <ShoppingBag size={21} strokeWidth={1.8} />
+            {itemCount > 0 && <span className="nav-badge-count">{itemCount}</span>}
+          </Link>
+
+          {/* Profile / Account Icon */}
           <Link
             className="icon-btn desktop-action"
             to={user ? '/profile' : '/login'}
             aria-label="My Account"
           >
-            <UserRound size={20} strokeWidth={1.8} />
+            <UserRound size={21} strokeWidth={1.8} />
           </Link>
         </div>
       </header>

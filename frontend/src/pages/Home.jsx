@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShoppingBag, Heart, Check, Sparkles } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import productService from '../services/productService';
 import useCart from '../hooks/useCart';
 
@@ -8,7 +8,6 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeCategory, setActiveCategory] = useState('all');
   const [addedId, setAddedId] = useState(null);
   const { addToCart } = useCart();
 
@@ -18,9 +17,15 @@ export default function Home() {
       try {
         setLoading(true);
         setError(null);
-        const data = await productService.getProducts();
+        // Load only available stock
+        const data = await productService.getProducts({ inStock: 'true' });
         if (isMounted && data) {
-          setProducts(Array.isArray(data) ? data : data.products || []);
+          const rawList = Array.isArray(data) ? data : data.products || [];
+          // Only show available stock in the website
+          const inStockOnly = rawList.filter(
+            (p) => p.stock_quantity === undefined || p.stock_quantity > 0
+          );
+          setProducts(inStockOnly);
         }
       } catch (err) {
         if (isMounted) setError(err.message);
@@ -42,32 +47,20 @@ export default function Home() {
     setTimeout(() => setAddedId(null), 1800);
   };
 
-  // Filter products by category using the present application products
-  const filteredProducts = useMemo(() => {
-    if (activeCategory === 'all') return products;
-    return products.filter((p) => {
-      const catSlug = (p.category_slug || '').toLowerCase();
-      const catName = (p.category || '').toLowerCase();
-      const name = (p.name || '').toLowerCase();
+  // Distinct category showcase: exactly 1 product per each distinct category
+  const categoryShowcase = useMemo(() => {
+    const seenCategories = new Set();
+    const showcase = [];
 
-      if (activeCategory === 'shoulder') {
-        return catSlug.includes('crossbody') || catSlug.includes('sling') || name.includes('sling') || name.includes('shoulder');
+    for (const p of products) {
+      const catKey = (p.category_slug || p.category || 'collection').toLowerCase();
+      if (!seenCategories.has(catKey)) {
+        seenCategories.add(catKey);
+        showcase.push(p);
       }
-      if (activeCategory === 'tote') {
-        return catSlug.includes('tote') || catSlug.includes('market') || name.includes('tote') || name.includes('market');
-      }
-      if (activeCategory === 'pouch') {
-        return catSlug.includes('pouch') || catSlug.includes('wallet') || name.includes('pouch') || name.includes('wallet');
-      }
-      if (activeCategory === 'gifting') {
-        return catSlug.includes('potli') || catSlug.includes('accessories') || name.includes('potli') || name.includes('gift') || p.price < 1500;
-      }
-      if (activeCategory === 'tech') {
-        return catSlug.includes('messenger') || catSlug.includes('laptop') || catSlug.includes('backpack') || name.includes('laptop') || name.includes('backpack');
-      }
-      return true;
-    });
-  }, [products, activeCategory]);
+    }
+    return showcase;
+  }, [products]);
 
   return (
     <div className="bethany-homepage">
@@ -228,7 +221,8 @@ export default function Home() {
       </section>
 
       {/* ========================================================
-          PAGE 2: OUR COLLECTION (USING PRESENT PRODUCTS ONLY)
+          PAGE 2: OUR COLLECTION — EXACTLY 1 PART PER CATEGORY
+          (NO PRODUCT COUNT NUMBERS)
           ======================================================== */}
       <section id="collection" className="bethany-collection-section">
         <div className="bethany-container">
@@ -238,51 +232,11 @@ export default function Home() {
               <h2>Designed for everyday India</h2>
             </div>
             <Link to="/shop" className="collection-view-all">
-              View all products ({products.length}) →
+              View all products →
             </Link>
           </div>
 
-          {/* Category Filter Pills (Page 4) */}
-          <div className="collection-filter-pills" role="tablist">
-            <button
-              className={`filter-pill ${activeCategory === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveCategory('all')}
-            >
-              All
-            </button>
-            <button
-              className={`filter-pill ${activeCategory === 'shoulder' ? 'active' : ''}`}
-              onClick={() => setActiveCategory('shoulder')}
-            >
-              Shoulder bags
-            </button>
-            <button
-              className={`filter-pill ${activeCategory === 'tote' ? 'active' : ''}`}
-              onClick={() => setActiveCategory('tote')}
-            >
-              Totes and market
-            </button>
-            <button
-              className={`filter-pill ${activeCategory === 'pouch' ? 'active' : ''}`}
-              onClick={() => setActiveCategory('pouch')}
-            >
-              Pouches
-            </button>
-            <button
-              className={`filter-pill ${activeCategory === 'gifting' ? 'active' : ''}`}
-              onClick={() => setActiveCategory('gifting')}
-            >
-              Festive and gifting
-            </button>
-            <button
-              className={`filter-pill ${activeCategory === 'tech' ? 'active' : ''}`}
-              onClick={() => setActiveCategory('tech')}
-            >
-              Travel and tech
-            </button>
-          </div>
-
-          {/* Product Grid — Rendering Present Application Products Only */}
+          {/* Product Grid — 1 Piece per Each Category */}
           {loading ? (
             <div className="bethany-product-grid">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
@@ -300,14 +254,14 @@ export default function Home() {
               <p style={{ color: '#e53e3e', marginBottom: '16px' }}>{error}</p>
               <button className="btn-ochre" onClick={() => window.location.reload()}>Try reloading</button>
             </div>
-          ) : filteredProducts.length === 0 ? (
+          ) : categoryShowcase.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px', background: '#fff', borderRadius: '8px' }}>
-              <p>No products found in this category.</p>
-              <button className="btn-ochre" onClick={() => setActiveCategory('all')}>Show all products</button>
+              <p>Collection arriving shortly.</p>
+              <Link to="/shop" className="btn-ochre">Explore pieces</Link>
             </div>
           ) : (
             <div className="bethany-product-grid">
-              {filteredProducts.map((p) => {
+              {categoryShowcase.map((p) => {
                 const isJustAdded = addedId === p.id;
                 const formattedPrice = `₹${Number(p.price || 0).toLocaleString('en-IN')}`;
                 const imageSrc = p.primary_image || (p.images && p.images[0]?.image_url) || p.image_url;
@@ -398,9 +352,9 @@ export default function Home() {
               <p>We are not asking for pity. We are inviting you to partner with us.</p>
             </div>
             <div className="donate-actions">
-              <a href="#collection" className="btn-ochre">
+              <Link to="/shop" className="btn-ochre">
                 Shop now
-              </a>
+              </Link>
               <a
                 href="https://wa.me/918000123456?text=Hello%20Bethany%20Looms,%20I%20would%20like%20to%20donate%20to%20support%20the%20Bethany%20Leprosy%20Mission%20Association."
                 target="_blank"

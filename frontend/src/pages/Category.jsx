@@ -83,10 +83,14 @@ export default function Category() {
         setError(null);
         const data = await productService.getProducts({
           category: slug,
-          sort: sortParam
+          sort: sortParam,
+          inStock: 'true'
         });
         if (active) {
-          setProducts(data);
+          const availableData = (data || []).filter(
+            (p) => p.stock_quantity === undefined || p.stock_quantity > 0
+          );
+          setProducts(availableData);
           setCurrentPage(1);
           setActiveSubcategory('');
         }
