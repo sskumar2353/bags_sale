@@ -60,6 +60,20 @@ export const Product = {
         (
           SELECT image_url 
           FROM product_images 
+          WHERE product_id = p.id 
+          ORDER BY is_primary DESC, sort_order ASC 
+          LIMIT 1
+        ) AS primary_image,
+        (
+          SELECT image_url 
+          FROM product_images 
+          WHERE product_id = p.id 
+          ORDER BY is_primary DESC, sort_order ASC 
+          LIMIT 1
+        ) AS image_url,
+        (
+          SELECT image_url 
+          FROM product_images 
           WHERE product_id = p.id AND is_primary = 0
           ORDER BY sort_order ASC 
           LIMIT 1
@@ -121,6 +135,8 @@ export const Product = {
     return {
       ...product,
       image: images[0]?.image_url || null,
+      primary_image: images[0]?.image_url || null,
+      image_url: images[0]?.image_url || null,
       images,
       variants
     };

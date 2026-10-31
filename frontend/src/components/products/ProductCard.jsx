@@ -19,7 +19,12 @@ export default function ProductCard({ product }) {
   const mrp = Number(product.mrp || price);
   const discount = mrp > price ? Math.round((1 - price / mrp) * 100) : 0;
   
-  const primaryImg = product.image || product.images?.[0]?.image_url || 'https://images.dailyobjects.com/marche/assets/images/other-2/CP-desktop.jpg?tr=cm-pad_crop,v-3';
+  const primaryImg =
+    product.image ||
+    product.primary_image ||
+    product.image_url ||
+    product.images?.[0]?.image_url ||
+    'https://images.dailyobjects.com/marche/product-images/1204/space-blue-idyll-tote-images/Space-Blue-Idyll-Tote.png?tr=cm-pad_resize,v-3';
   const altImg = product.alt_image || product.images?.[1]?.image_url;
 
   const handleQuickAdd = async (e) => {

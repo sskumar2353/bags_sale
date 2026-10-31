@@ -9,26 +9,27 @@ function HomeCollectionCard({ product, onAddToCart, isJustAdded }) {
   const [activeSwatchImage, setActiveSwatchImage] = useState(null);
   const [activeSwatchId, setActiveSwatchId] = useState(null);
 
-  const formattedPrice = `₹${Number(product.price || 0).toLocaleString('en-IN')}`;
-  const defaultImage = product.primary_image || (product.images && product.images[0]?.image_url) || product.image_url;
+  const defaultImage =
+    product.image ||
+    product.primary_image ||
+    product.image_url ||
+    (product.images && product.images[0]?.image_url) ||
+    'https://images.dailyobjects.com/marche/product-images/1204/space-blue-idyll-tote-images/Space-Blue-Idyll-Tote.png?tr=cm-pad_resize,v-3';
   const imageSrc = activeSwatchImage || defaultImage;
 
   return (
     <div className="bethany-product-card">
       <Link to={`/product/${product.slug}`} className="product-img-box">
-        {imageSrc ? (
-          <img
-            src={imageSrc}
-            alt={product.name}
-            loading="lazy"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.parentElement.classList.add('weave-pattern-indigo');
-            }}
-          />
-        ) : (
-          <div className="weave-pattern-indigo" style={{ width: '100%', height: '100%' }} />
-        )}
+        <img
+          src={imageSrc}
+          alt={product.name}
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src =
+              'https://images.dailyobjects.com/marche/product-images/1204/space-blue-idyll-tote-images/Space-Blue-Idyll-Tote.png?tr=cm-pad_resize,v-3';
+          }}
+        />
       </Link>
 
       <div className="product-info-box">
@@ -201,19 +202,37 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Visual Collage Grid matching PDF Page 1 */}
+            {/* Visual Collage Grid with Real World Photography */}
             <div className="hero-visual-collage">
-              {/* Large Indigo Woven Panel */}
-              <div className="collage-item large weave-pattern-indigo">
-                <span className="photo-label-pill">Photo: artisan at the loom</span>
+              {/* Large Hero: Artisan at the Loom */}
+              <div className="collage-item large">
+                <img
+                  src="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=1200&q=85"
+                  alt="Artisan at the handloom weaving pure cotton fabric"
+                  className="collage-real-img"
+                  loading="eager"
+                />
+                <span className="photo-label-pill">Artisan at the loom · Bapatla</span>
               </div>
-              {/* Top Right Ochre Woven Panel */}
-              <div className="collage-item weave-pattern-ochre">
-                <span className="photo-label-pill">Photo: jhola bag</span>
+              {/* Top Right: Handcrafted Jhola Bag */}
+              <div className="collage-item">
+                <img
+                  src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=85"
+                  alt="Handcrafted classic jhola shoulder bag"
+                  className="collage-real-img"
+                  loading="eager"
+                />
+                <span className="photo-label-pill">Classic Jhola Shoulder Bag</span>
               </div>
-              {/* Bottom Right Terracotta Panel */}
-              <div className="collage-item weave-pattern-terracotta">
-                <span className="photo-label-pill">Photo: potli pouch</span>
+              {/* Bottom Right: Handwoven Potli Pouch */}
+              <div className="collage-item">
+                <img
+                  src="https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=800&q=85"
+                  alt="Artisanal handwoven festive potli bag"
+                  className="collage-real-img"
+                  loading="eager"
+                />
+                <span className="photo-label-pill">Artisan Potli Pouch</span>
               </div>
             </div>
           </div>
@@ -252,9 +271,15 @@ export default function Home() {
       <section id="our-story" className="bethany-story-section">
         <div className="bethany-container">
           <div className="story-grid">
-            {/* Left: Sage Green Weave Panel */}
-            <div className="story-card-visual weave-pattern-sage">
-              <span className="photo-label-pill">Photo: Meet the maker</span>
+            {/* Left: Real-world Photo of Maker */}
+            <div className="story-card-visual">
+              <img
+                src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=85"
+                alt="Meet the Maker - Master artisan at Bethany Looms"
+                className="story-real-img"
+                loading="lazy"
+              />
+              <span className="photo-label-pill">Meet the maker · Master Weaver</span>
             </div>
 
             {/* Right: Story Content */}

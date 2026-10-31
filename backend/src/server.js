@@ -162,7 +162,7 @@ if (process.env.NODE_ENV !== 'test') {
       const [[catCheck]] = await pool.query(
         "SELECT COUNT(*) as count FROM categories WHERE is_active = 1 AND slug = 'backpacks'"
       );
-      if (!prodCheck || prodCheck.count < 12 || (catCheck && catCheck.count > 0)) {
+      if (!prodCheck || prodCheck.count < 60 || (catCheck && catCheck.count > 0)) {
         console.log('🔄 Initializing Bethany Looms catalog on connected database...');
         await runCatalogMigration();
       } else {
