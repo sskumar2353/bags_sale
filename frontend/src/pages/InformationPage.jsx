@@ -84,10 +84,10 @@ export default function InformationPage() {
           <div style={{ background: '#f7f6f2', padding: '24px', borderRadius: '8px', border: '1px solid #e5e3dc', marginTop: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
               <ShieldCheck size={20} color="#121212" />
-              <h2 style={{ fontSize: '17px', margin: 0, fontWeight: 700 }}>Operating Entity & Corporate Governance</h2>
+              <h2 style={{ fontSize: '17px', margin: 0, fontWeight: 700 }}>Operating Entity & Brand Overview</h2>
             </div>
             <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#444' }}>
-              <strong>Daily Objects Design Lab Pvt. Ltd.</strong> is a registered Indian private limited company incorporated under the Companies Act, 2013. We maintain full compliance with Ministry of Electronics and Information Technology (MeitY) guidelines, Consumer Protection E-Commerce Rules, and WCAG accessibility standards.
+              <strong>Daily Objects Design Lab Pvt. Ltd.</strong> is a design-led lifestyle brand founded in New Delhi, India. We are committed to creating thoughtfully engineered carry products using resilient materials, precision hardware, and sustainable production practices.
             </p>
           </div>
         </div>

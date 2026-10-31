@@ -125,9 +125,7 @@ export default function Footer() {
 
       <div className="footer-bottom">
         <span>© 2026 Daily Objects Design Lab Pvt. Ltd. Made for everyday.</span>
-        <span>
-          Compliance: <a href="https://www.ux4g.gov.in" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>UX4G Guidelines (www.ux4g.gov.in)</a> · GIGW 3.0 · WCAG 2.1 AA
-        </span>
+        <span>Designed for life in motion</span>
       </div>
     </footer>
   );
