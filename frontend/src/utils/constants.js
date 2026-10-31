@@ -6,13 +6,18 @@ export const API_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/ap
 export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || '';
 
 export const CATEGORIES = [
-  'Tote Bags',
-  'Crossbody Bags',
-  'Messenger / Laptop Bags',
-  'Phone Bags',
-  'Wallets',
-  'Pouches',
-  'Gifting'
+  'Classic Jhola Shoulder Bag',
+  'Cross-Body Sling Bag',
+  'Everyday Tote Bag',
+  'Market/Shopping Bag',
+  'Potli Bag',
+  'Laptop Sleeve',
+  'Zip Pouch / Utility Pouch',
+  'Cosmetic / Makeup Pouch',
+  'Coin Purse & Wallet Pouch',
+  'Tiffin / Lunch Bag',
+  'Passport & Travel Pouch',
+  'Mobile Pouch'
 ];
 
 export const NAV_LINKS = [
