@@ -98,6 +98,7 @@ VALUES
 (59, 12, 'Dual-Pocket Phone & Earphones Pouch', 'dual-pocket-phone-earphones-pouch', 'Front dedicated slip for your AirPods or wired earphones plus central phone chamber with scratch-resistant microfiber lining.', 'Perfect for Commuters and music lovers.', 'BL-MOB-004', 749.00, 1049.00, 28.6, 45, '', 1, 0, 4.96, 147, 1),
 (60, 12, 'Padded Travel Mobile Holster Sling', 'padded-travel-mobile-holster-sling', 'Reinforced 4mm foam padding protects your phone screen from accidental table knocks and bag drops during active travel.', 'Perfect for Travel, sightseeing, and festivals.', 'BL-MOB-005', 849.00, 1249.00, 32.03, 45, '', 1, 0, 5.01, 162, 1)
 ON DUPLICATE KEY UPDATE
+    sku = VALUES(sku),
     category_id = VALUES(category_id),
     name = VALUES(name),
     slug = VALUES(slug),
