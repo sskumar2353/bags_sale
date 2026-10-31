@@ -1005,3 +1005,113 @@ body {
   color: var(--bethany-ochre, #e5ad42);
   margin-left: 8px;
 }
+
+/* =========================================================
+   BETHANY LOOMS CIRCULAR CATEGORY STORY BAR
+   ========================================================= */
+.bethany-story-bar-wrapper {
+  background: var(--bethany-cream, #fbf9f4);
+  border-bottom: 1px solid rgba(30, 45, 74, 0.08);
+  width: 100%;
+  position: relative;
+  z-index: 10;
+}
+
+.bethany-story-bar-container {
+  max-width: 1380px;
+  margin: 0 auto;
+  display: flex;
+  gap: clamp(16px, 2.5vw, 28px);
+  align-items: flex-start;
+  overflow-x: auto;
+  padding: 16px clamp(16px, 3vw, 36px) 14px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+@media (min-width: 1100px) {
+  .bethany-story-bar-container {
+    justify-content: center;
+  }
+}
+
+.bethany-story-bar-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.story-circle-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  min-width: 78px;
+  max-width: 92px;
+  flex-shrink: 0;
+  cursor: pointer;
+  group: story-item;
+}
+
+.story-circle-avatar {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1.5px solid #eae5d9;
+  box-shadow: 0 2px 6px rgba(30, 45, 74, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-color 0.25s ease,
+              box-shadow 0.25s ease;
+}
+
+.story-circle-item:hover .story-circle-avatar {
+  transform: translateY(-3px) scale(1.05);
+  border-color: var(--bethany-ochre, #e5ad42);
+  box-shadow: 0 6px 16px rgba(229, 173, 66, 0.25);
+}
+
+.story-circle-avatar img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+
+.story-circle-item:hover .story-circle-avatar img {
+  transform: scale(1.06);
+}
+
+.story-circle-label {
+  margin-top: 8px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--bethany-navy, #1e2d4a);
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.5px;
+  line-height: 1.25;
+  transition: color 0.2s ease;
+}
+
+.story-circle-item:hover .story-circle-label {
+  color: var(--bethany-ochre, #e5ad42);
+}
+
+@media (max-width: 640px) {
+  .story-circle-avatar {
+    width: 64px;
+    height: 64px;
+  }
+  .story-circle-avatar img {
+    width: 46px;
+    height: 46px;
+  }
+  .story-circle-label {
+    font-size: 9.5px;
+  }
+}

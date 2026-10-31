@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
 import productService from '../services/productService';
 import useCart from '../hooks/useCart';
+import CategoryStoryBar from '../components/home/CategoryStoryBar';
 
 export default function Home() {
+  const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,14 +15,19 @@ export default function Home() {
 
   useEffect(() => {
     let isMounted = true;
-    async function loadProducts() {
+    async function loadData() {
       try {
         setLoading(true);
         setError(null);
-        // Load only available stock
-        const data = await productService.getProducts({ inStock: 'true' });
-        if (isMounted && data) {
-          const rawList = Array.isArray(data) ? data : data.products || [];
+        // Load categories and products dynamically from database/API
+        const [catData, prodData] = await Promise.all([
+          productService.getCategories().catch(() => []),
+          productService.getProducts({ inStock: 'true' })
+        ]);
+
+        if (isMounted) {
+          setCategories(Array.isArray(catData) ? catData : []);
+          const rawList = Array.isArray(prodData) ? prodData : prodData?.products || [];
           // Only show available stock in the website
           const inStockOnly = rawList.filter(
             (p) => p.stock_quantity === undefined || p.stock_quantity > 0
@@ -33,7 +40,7 @@ export default function Home() {
         if (isMounted) setLoading(false);
       }
     }
-    loadProducts();
+    loadData();
     return () => {
       isMounted = false;
     };
@@ -64,6 +71,9 @@ export default function Home() {
 
   return (
     <div className="bethany-homepage">
+      {/* Dynamic Circular Category Story Bar (Synced with Database) */}
+      <CategoryStoryBar categories={categories} products={products} />
+
       {/* ========================================================
           PAGE 1: HERO SECTION
           ======================================================== */}

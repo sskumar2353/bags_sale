@@ -74,9 +74,9 @@ export default function PaymentSection({
         type="submit"
         className="button button-dark full"
         disabled={busy}
-        style={{ minHeight: '52px' }}
+        style={{ minHeight: '52px', fontWeight: 600, fontSize: '15px' }}
       >
-        {busy ? 'Securing your order…' : `Pay Securely · ${formatPrice(total)}`}
+        {busy ? 'Connecting to Razorpay…' : `Pay Securely with Razorpay · ${formatPrice(total)}`}
       </button>
     </div>
   );
