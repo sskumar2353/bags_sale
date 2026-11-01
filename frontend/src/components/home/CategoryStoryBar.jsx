@@ -31,49 +31,49 @@ export const OFFICIAL_12_CATEGORIES = [
     id: 5,
     name: 'Potli Bag',
     slug: 'potli-bag',
-    image: 'https://images.dailyobjects.com/marche/product-images/1204/cardinal-love-idyll-tote-bag-images/Cardinal-Love-Idyll-Tote-Bag.png?tr=cm-pad_resize,v-3'
+    image: 'https://images.dailyobjects.com/marche/product-images/1811/red-puft-bucket-sling-bag-images/Red-Puft-Buckets-Slings-Bagss.png?tr=cm-pad_resize,v-3'
   },
   {
     id: 6,
     name: 'Laptop Sleeve',
     slug: 'laptop-sleeve',
-    image: 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-messenger-bags.jpg?tr=cm-pad_crop,v-3'
+    image: 'https://images.dailyobjects.com/marche/product-images/1202/pivot-meridian-convertible-briefpack-sand-images/Pivot-Meridian-Convertible-Briefpack-Sand.png?tr=cm-pad_resize,v-3'
   },
   {
     id: 7,
     name: 'Zip Pouch / Utility Pouch',
     slug: 'zip-pouch-utility-pouch',
-    image: 'https://images.dailyobjects.com/marche/product-images/1204/carbon-black-idyll-tote-images/Carbon-Black-Idyll-Tote.png?tr=cm-pad_resize,v-3'
+    image: 'https://images.dailyobjects.com/marche/product-images/1301/carbon-black-easy-square-pouch-images/Carbon-Black-Easy-Square-Pouch.png?tr=cm-pad_resize,v-3'
   },
   {
     id: 8,
     name: 'Cosmetic / Makeup Pouch',
     slug: 'cosmetic-makeup-pouch',
-    image: 'https://images.dailyobjects.com/marche/product-images/1204/sand-basalt-pivot-key-tote-images/Sand-Basalt-Pivot-Key-Tote.png?tr=cm-pad_resize,v-3'
+    image: 'https://images.dailyobjects.com/marche/product-images/1301/dailyobjects-crimson-red-regular-taxi-organiser-images/DailyObjects-Crimson-Red-Regular-Taxi-Organiser-Medium.png?tr=cm-pad_resize,v-3'
   },
   {
     id: 9,
     name: 'Coin Purse & Wallet Pouch',
     slug: 'coin-purse-wallet-pouch',
-    image: 'https://images.dailyobjects.com/marche/assets/images/other/new-wallets.jpg?tr=cm-pad_crop,v-3'
+    image: 'https://images.dailyobjects.com/marche/product-images/1703/dailyobjects-navy-blue-tiny-taxi-organiser-images/DailyObjects-Navy-Blue-Tiny-Taxi-Organiser-Small-4.png?tr=cm-pad_resize,v-3'
   },
   {
     id: 10,
     name: 'Tiffin / Lunch Bag',
     slug: 'tiffin-lunch-bag',
-    image: 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-duffle-bags.jpg?tr=cm-pad_crop,v-3'
+    image: 'https://images.dailyobjects.com/marche/product-images/1204/dailyobjects-midnight-blue-buoy-tote-bag-images/DailyObjects-Midnight-Blue-Buoyant-Tote-Bag.png?tr=cm-pad_resize,v-3'
   },
   {
     id: 11,
     name: 'Passport & Travel Pouch',
     slug: 'passport-travel-pouch',
-    image: 'https://images.dailyobjects.com/marche/assets/images/other/new-wallets.jpg?tr=cm-pad_crop,v-3'
+    image: 'https://images.dailyobjects.com/marche/product-images/1811/pivot-travel-sling-sand-images/Pivot-Travel-Sling-Sand-vw.png?tr=cm-pad_resize,v-3'
   },
   {
     id: 12,
     name: 'Mobile Pouch',
     slug: 'mobile-pouch',
-    image: 'https://images.dailyobjects.com/marche/assets/images/other-2/Category-page-bags-and-wallets-phone-bag.jpg?tr=cm-pad_crop,v-3'
+    image: 'https://images.dailyobjects.com/marche/product-images/1811/monkey-shoulder-x-do-utility-phone-sling-images/Monkey-Shoulder-x-DO-Black-Utility-Phone-Sling.png?tr=cm-pad_resize,v-3'
   }
 ];
 

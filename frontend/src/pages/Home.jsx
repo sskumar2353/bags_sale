@@ -226,15 +226,16 @@ export default function Home() {
                 />
                 <span className="photo-label-pill">Classic Jhola Shoulder Bag</span>
               </div>
-              {/* Bottom Right: Handwoven Potli Pouch */}
+              {/* Bottom Right: Handwoven Potli Bag */}
               <div className="collage-item">
                 <img
-                  src="https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=800&q=85"
-                  alt="Artisanal handwoven festive potli bag"
+                  src="https://images.dailyobjects.com/marche/product-images/1811/red-puft-bucket-sling-bag-images/Red-Puft-Buckets-Slings-Bagss.png?tr=cm-pad_resize,v-3"
+                  alt="Artisanal handwoven festive potli drawstring bag"
                   className="collage-real-img"
                   loading="eager"
+                  style={{ objectFit: 'contain', background: '#faf8f5', padding: '12px' }}
                 />
-                <span className="photo-label-pill">Artisan Potli Pouch</span>
+                <span className="photo-label-pill">Artisan Festive Potli Bag</span>
               </div>
             </div>
           </div>
@@ -268,34 +269,34 @@ export default function Home() {
       </section>
 
       {/* ========================================================
-          PAGE 1: OUR STORY SECTION
+          PAGE 1: OUR STORY SECTION — CARING FOR LEPROSY SURVIVORS
           ======================================================== */}
       <section id="our-story" className="bethany-story-section">
         <div className="bethany-container">
           <div className="story-grid">
-            {/* Left: Real-world Photo of Maker */}
+            {/* Left: Compassionate Care & Helping Resource */}
             <div className="story-card-visual">
               <img
-                src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=85"
-                alt="Meet the Maker - Master artisan at Bethany Looms"
+                src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=1200&q=85"
+                alt="Compassionate healthcare, rehabilitation and livelihood for leprosy-affected artisans at Bethany Mission"
                 className="story-real-img"
                 loading="lazy"
               />
-              <span className="photo-label-pill">Meet the maker · Master Weaver</span>
+              <span className="photo-label-pill">Care & Healing for Leprosy Survivors · Bethany Mission</span>
             </div>
 
             {/* Right: Story Content */}
             <div className="story-content">
-              <span className="bethany-eyebrow">OUR STORY</span>
+              <span className="bethany-eyebrow">OUR STORY & SOCIAL MISSION</span>
               <h2>Skill has no stigma. Dignity can be woven back.</h2>
               <p>
-                Bethany Looms is the handcraft initiative of the Bethany Leprosy Mission Association, which runs primary care and a home for people affected by leprosy and for elders who have no one to turn to.
+                Bethany Looms is the handcraft and social healing initiative of the Bethany Leprosy Mission Association in Bapatla. We provide free clinical treatment, ulcer dressing, sheltered residence, and dignified livelihoods for people affected by leprosy and for elderly residents who have nowhere else to go.
               </p>
               <p>
-                For many of our residents, the world once said, "You can't." Here, with patient hands and steady looms, they answer, "Watch me." When you buy a bag, you give a family medicine, a meal, a roof and a reason to smile.
+                For many of our residents, society once said, "You can't." Here, supported by caring hands, patient medical attention, and wooden pitlooms, they proudly answer, "Watch me." Every bag you purchase directly funds medicines, nutrition, safe shelter, and honorable wages.
               </p>
               <Link to="/pages/about-us" className="story-read-link">
-                Read the full story <ArrowRight size={16} />
+                Read our complete social mission <ArrowRight size={16} />
               </Link>
             </div>
           </div>
