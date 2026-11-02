@@ -112,7 +112,7 @@ export default function CategoryStoryBar({ categories = [], products = [] }) {
   const [isPaused, setIsPaused] = useState(false);
   const [visibleSlots, setVisibleSlots] = useState(7);
 
-  // Responsive slots detection: 7 on desktop, 5 on tablet, 4 on mobile
+  // Responsive slots detection: 7 on desktop, 5 on tablet, 4 on standard mobile, 3 on compact mobile
   useEffect(() => {
     function handleResize() {
       const width = window.innerWidth;
@@ -120,8 +120,10 @@ export default function CategoryStoryBar({ categories = [], products = [] }) {
         setVisibleSlots(7);
       } else if (width >= 720) {
         setVisibleSlots(5);
-      } else {
+      } else if (width >= 480) {
         setVisibleSlots(4);
+      } else {
+        setVisibleSlots(3);
       }
     }
     handleResize();

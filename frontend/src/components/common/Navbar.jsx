@@ -115,7 +115,10 @@ export default function Navbar() {
         <Link to="/" className="brand-logo" onClick={() => setMenuOpen(false)} aria-label="Bethany Looms Home">
           <div className="brand-text-bethany">
             <span className="brand-name">Bethany Looms</span>
-            <span className="brand-subname">A project of Bethany Leprosy Mission Association</span>
+            <span className="brand-subname">
+              <span className="brand-subname-full">A project of Bethany Leprosy Mission Association</span>
+              <span className="brand-subname-short">Bethany Leprosy Mission</span>
+            </span>
           </div>
         </Link>
 
@@ -164,6 +167,15 @@ export default function Navbar() {
             </Link>
           </div>
         </nav>
+
+        {/* Mobile Drawer Backdrop */}
+        {menuOpen && (
+          <div
+            className="nav-backdrop"
+            onClick={() => setMenuOpen(false)}
+            aria-hidden="true"
+          />
+        )}
 
         {/* Right Action Icons aligned in a luxury manner */}
         <div className="header-actions">

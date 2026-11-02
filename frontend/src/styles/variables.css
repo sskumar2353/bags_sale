@@ -38,16 +38,30 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
   font-size: 16px;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
+  width: 100%;
+  max-width: 100vw;
   min-width: 320px;
   overflow-x: hidden;
   font-size: 15px;
   line-height: 1.6;
   color: var(--ink);
   background: var(--paper);
+}
+
+#root,
+.site-wrapper,
+.main-content {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 button,
